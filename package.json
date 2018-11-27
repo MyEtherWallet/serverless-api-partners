@@ -1,0 +1,38 @@
+{
+  "name": "changelly",
+  "version": "0.1.0",
+  "description": "Serverless api for changelly",
+  "main": "index.js",
+  "scripts": {
+    "start": "babel src --out-dir dist",
+    "create": "npm run start && claudia create --profile claudia --region us-east-1 --api-module dist/index",
+    "update": "npm run start && claudia update --profile claudia",
+    "test": "jest tests"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MyEtherWallet/serverless-api-partners.git"
+  },
+  "author": "#teamMEW",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/MyEtherWallet/serverless-api-partners/issues"
+  },
+  "homepage": "https://github.com/MyEtherWallet/serverless-api-partners#readme",
+  "devDependencies": {
+    "@babel/cli": "^7.1.5",
+    "@babel/core": "^7.1.6",
+    "@babel/preset-env": "^7.1.6",
+    "babel-core": "^7.0.0-bridge.0",
+    "babel-jest": "^23.6.0",
+    "claudia": "^5.2.0",
+    "jest": "^23.6.0"
+  },
+  "dependencies": {
+    "aws-sdk": "^2.362.0",
+    "claudia-api-builder": "^4.1.1",
+    "dotenv": "^6.1.0",
+    "request": "^2.88.0",
+    "simple-encryptor": "^2.0.0"
+  }
+}
