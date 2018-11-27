@@ -1,7 +1,7 @@
 import { error, success } from "../response";
 import changellyConfigs from "./config";
 import allowedMethods from "./validMethods";
-import request from "./request";
+import request from "../request";
 import crypto from "crypto";
 export default (req, logger) => {
   return new Promise((resolve, reject) => {
