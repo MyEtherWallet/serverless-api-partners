@@ -1,7 +1,11 @@
 {
   "lambda": {
-    "role": "lambdamew-executor",
-    "name": "lambdamew",
+    "role": "serverless-api-partners-executor",
+    "name": "serverless-api-partners",
     "region": "us-east-1"
+  },
+  "api": {
+    "id": "6szankrze5",
+    "module": "dist/index"
   }
 }

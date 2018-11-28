@@ -15,4 +15,4 @@ api.post("/bity", request => {
 
 api.get("/", () => "MyEtherWallet Partners API");
 
-export default api;
+module.exports = api;

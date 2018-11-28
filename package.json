@@ -1,8 +1,11 @@
 {
-  "name": "changelly",
+  "name": "serverless-api-partners",
   "version": "0.1.0",
   "description": "Serverless api for changelly",
   "main": "index.js",
+  "files": [
+    "dist/**/*"
+  ],
   "scripts": {
     "start": "babel src --out-dir dist",
     "create": "npm run start && claudia create --profile claudia --region us-east-1 --api-module dist/index",
