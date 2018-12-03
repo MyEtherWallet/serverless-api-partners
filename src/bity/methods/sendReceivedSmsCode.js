@@ -1,8 +1,6 @@
 import configs from "../config";
 import request from "../../request";
 import { error, success } from "../../response";
-// import SimpleEncryptor from "simple-encryptor";
-// const encryptor = new SimpleEncryptor(configs.encryptionKey);
 const formatResponse = order => {
   return {
     phone_token: order.phone_token

@@ -1,37 +1,11 @@
 import configs from "../config";
 import request from "../../request";
 import { error, success } from "../../response";
-import SimpleEncryptor from "simple-encryptor";
-// const encryptor = new SimpleEncryptor(configs.encryptionKey);
 const formatResponse = order => {
-  return order // TODO ask about
-  // return {
-  //   id: encryptor.encrypt(
-  //     order.resource_uri
-  //       .match(/\d/g)
-  //       .splice(1)
-  //       .join("")
-  //   ),
-  //   amount: order.amount,
-  //   payment_address: order.payment_url,
-  //   payment_amount: order.payment_amount,
-  //   reference: order.reference,
-  //   status: order.status,
-  //   validFor: 600,
-  //   timestamp_created: order.timestamp_created + "Z",
-  //   input: {
-  //     amount: order.inputtransactions[0].amount,
-  //     currency: order.inputtransactions[0].currency,
-  //     reference: order.inputtransactions[0].reference,
-  //     status: order.inputtransactions[0].status
-  //   },
-  //   output: {
-  //     amount: order.outputtransactions[0].amount,
-  //     currency: order.outputtransactions[0].currency,
-  //     reference: order.outputtransactions[0].reference,
-  //     status: order.outputtransactions[0].status
-  //   }
-  // };
+  console.log(order); // todo remove dev item
+  return {
+    id: order.headers['Location']
+  };
 };
 export default body => {
   return new Promise((resolve, reject) => {
@@ -43,7 +17,7 @@ export default body => {
     }
     const req = {
       url: configs.API_URL + configs.ORDER_PATH,
-      headers: {  'X-Phone-Token' : body.params.phoneToken, Authorization: "Bearer " + configs.BITY_TOKEN }
+      headers: {  'X-Phone-Token' : body.params.phoneToken }
     };
     const reqBody = {
       input: {
