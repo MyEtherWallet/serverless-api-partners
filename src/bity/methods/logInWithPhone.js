@@ -3,7 +3,12 @@ import request from "../../request";
 import { error, success } from "../../response";
 const formatResponse = order => {
   return {
-    phone_token: order.phone_token
+    phone_token: encryptor.encrypt(
+      order.phone_token // TODO fit regex to correctly match the returned content
+        .match(/\d/g)
+        .splice(1)
+        .join("")
+    ),
   };
 };
 export default body => {

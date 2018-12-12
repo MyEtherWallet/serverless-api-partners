@@ -2,11 +2,17 @@ import configs from "../config";
 import request from "../../request";
 import { error, success } from "../../response";
 const formatResponse = order => {
-  console.log(order); // todo remove dev item
   return {
-    id: order.headers['Location']
+    phone_token: encryptor.encrypt(
+      order.headers['Location'] // TODO fit regex to correctly match the returned content
+        .match(/\d/g)
+        .splice(1)
+        .join("")
+    ),
+    success: order.statusCode === 201
   };
 };
+
 export default body => {
   return new Promise((resolve, reject) => {
     if (
@@ -15,9 +21,10 @@ export default body => {
     ) {
       return reject(error("Not supported", body.id));
     }
+    const phoneToken = encryptor.decrypt(body.params.phoneToken);
     const req = {
       url: configs.API_URL + configs.ORDER_PATH,
-      headers: {  'X-Phone-Token' : body.params.phoneToken }
+      headers: {  'X-Phone-Token' : phoneToken }
     };
     const reqBody = {
       input: {

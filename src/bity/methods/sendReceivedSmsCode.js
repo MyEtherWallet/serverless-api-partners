@@ -3,7 +3,7 @@ import request from "../../request";
 import { error, success } from "../../response";
 const formatResponse = order => {
   return {
-    phone_token: order.phone_token
+    success: order.statusCode === 204
   };
 };
 export default body => {
@@ -14,9 +14,10 @@ export default body => {
     ) {
       return reject(error("Not supported", body.id));
     }
+    const phoneToken = encryptor.decrypt(body.params.phoneToken);
     const req = {
       url: configs.EXIT_TO_FIAT_API_URL + configs.EXIT_TO_FIAT_LOGIN_URL,
-      headers: { 'X-Phone-Token' : body.params.phoneToken ,Authorization: "Bearer " + configs.BITY_TOKEN }
+      headers: { 'X-Phone-Token' : phoneToken ,Authorization: "Bearer " + configs.BITY_TOKEN }
     };
     const reqBody = {
       phone_number: '+' + body.params.tan
@@ -26,7 +27,7 @@ export default body => {
         resolve(
           success({
             jsonrpc: "2.0",
-            result: result.statusCode === 204,
+            result: formatResponse(result),
             id: body.id
           })
         );
