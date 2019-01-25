@@ -3,7 +3,9 @@ export default [
   "getCurrenciesFull",
   "getMinAmount",
   "getExchangeAmount",
+  "getFixRate",
   "validateAddress",
   "createTransaction",
+  "createFixTransaction",
   "getStatus"
 ];

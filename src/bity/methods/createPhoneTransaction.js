@@ -1,68 +1,50 @@
-import configs from "../config";
-import request from "../../request";
-import { error, success } from "../../response";
+import configs from '../config';
+import request from '../bityRequestOnlyStatusResponse';
+import { error, success } from '../../response';
+import SimpleEncryptor from 'simple-encryptor';
+
+const encryptor = new SimpleEncryptor(configs.encryptionKey);
 const formatResponse = order => {
+  const statusId = order.headers['location'].replace('/api/v2/orders/', '');
   return {
-    phone_token: encryptor.encrypt(
-      order.headers['Location'] // TODO fit regex to correctly match the returned content
-        .match(/\d/g)
-        .splice(1)
-        .join("")
-    ),
-    success: order.statusCode === 201
+    status_address: encryptor.encrypt(statusId),
+    created: order.statusCode === 201
   };
 };
 
+const createPair = (orderDetails) => {
+  return orderDetails.input.currency + orderDetails.output.currency;
+};
 export default body => {
   return new Promise((resolve, reject) => {
     if (
-      !configs.orderValues[body.params.pair] ||
-      !configs.orderValues[body.params.pair].active
+      !configs.fiatValues[createPair(body.params.orderDetails)] ||
+      !configs.fiatValues[createPair(body.params.orderDetails)].active
     ) {
-      return reject(error("Not supported", body.id));
+      error(body.params);
+      return reject(error('Not supported', body.id));
     }
     const phoneToken = encryptor.decrypt(body.params.phoneToken);
     const req = {
-      url: configs.API_URL + configs.ORDER_PATH,
-      headers: {  'X-Phone-Token' : phoneToken }
-    };
-    const reqBody = {
-      input: {
-        amount: body.params.amount,
-        currency: body.params.fromCurrency,
-        type: 'crypto_address',
-        crypto_address: body.params.address
-      },
-      output: {
-        currency: body.params.toCurrency,
-        type: 'bank_account',
-        iban: body.params.iban,
-        bic_swift: body.params.bic_swift,
-        aba_number: body.params.aba_number,
-        sort_code: body.params.sort_code,
-        owner: {
-          name: body.params.name,
-          address: body.params.address,
-          address_complement: body.params.address_complement,
-          zip: body.params.zip,
-          city: body.params.city,
-          state: body.params.state,
-          country: body.params.country
-        }
+      url: configs.API_URL + configs.EXIT_TO_FIAT_ORDERS_URL,
+      headers: {
+        'X-Phone-Token': phoneToken,
+        Authorization: 'Bearer ' + configs.BITY_TOKEN
       }
     };
+    const reqBody = body.params.orderDetails;
     request(req, reqBody)
       .then(result => {
         resolve(
           success({
-            jsonrpc: "2.0",
+            jsonrpc: '2.0',
             result: formatResponse(result),
             id: body.id
           })
         );
       })
       .catch(err => {
-        reject(error(err, ""));
+        reject(error(err, ''));
       });
   });
 };

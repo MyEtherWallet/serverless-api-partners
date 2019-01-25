@@ -1,27 +1,30 @@
 import configs from '../config';
-import request from '../bityRequestOnlyStatusResponse';
+import request from '../../request';
 import { error, success } from '../../response';
-import SimpleEncryptor from 'simple-encryptor';
 
-const encryptor = new SimpleEncryptor(configs.encryptionKey);
 const formatResponse = order => {
-  return {success: order.statusCode === 204};
+  return order;
 };
 export default body => {
   return new Promise((resolve, reject) => {
     if (
-      !configs.fiatValues[body.params.pair] ||
-      !configs.fiatValues[body.params.pair].active
+      !configs.orderValues[body.params.pair] ||
+      !configs.orderValues[body.params.pair].active
     ) {
       return reject(error('Not supported', body.id));
     }
-    const phoneToken = encryptor.decrypt(body.params.phoneToken);
     const req = {
-      url: configs.API_URL + configs.EXIT_TO_FIAT_LOGIN_URL,
-      headers: {'X-Phone-Token': phoneToken}
+      url: configs.API_URL + configs.ESTIMATE,
+      headers: {Authorization: 'Bearer ' + configs.BITY_TOKEN}
     };
     const reqBody = {
-      tan: body.params.tan
+      'input': {
+        'currency': body.params.fromCurrency,
+        'amount': body.params.fromValue
+      },
+      'output': {
+        'currency': body.params.toCurrency
+      }
     };
     request(req, reqBody)
       .then(result => {
