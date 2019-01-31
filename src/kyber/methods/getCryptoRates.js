@@ -3,10 +3,8 @@ import request from '../../request';
 import { error, success } from '../../response';
 
 
-export default body => {
+export default () => {
   return new Promise((resolve, reject) => {
-    console.log('getCryptoRates')
-
     const req = {
       url: configs.API_URL + configs.RATES,
       method: 'GET'

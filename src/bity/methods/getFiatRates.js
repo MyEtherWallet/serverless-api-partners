@@ -3,9 +3,8 @@ import request from '../../request';
 import { error, success } from '../../response';
 
 
-export default body => {
+export default () => {
   return new Promise((resolve, reject) => {
-    console.log('getFiatRates')
     const req = {
       url: configs.API_URL + configs.BITY_EXIT_RATES,
       method: 'GET'
