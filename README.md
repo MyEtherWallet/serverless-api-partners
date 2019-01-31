@@ -58,3 +58,30 @@ Except `api-key` and `sign` headers are not required
   "id": 85
 }
 ```
+
+# Kyber API
+
+> `https://swap.mewapi.io/kyber`
+
+### getSupportedTokens
+
+```
+{
+  "jsonrpc": "2.0",
+  "method": "getSupportedTokens",
+  "params": [],
+  "id": 85
+}
+```
+
+
+### getCryptoRates
+
+```
+{
+  "jsonrpc": "2.0",
+  "method": "getCryptoRates",
+  "params": [],
+  "id": 85
+}
+```
