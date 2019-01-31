@@ -27,7 +27,7 @@ export default body => {
     const orderid = encryptor.decrypt(body.params.orderId);
     const phoneToken = encryptor.decrypt(body.params.phoneToken);
     const req = {
-      url: configs.API_URL + configs.ORDER_DETAIL_URL + orderid,
+      url: configs.API_URL + configs.ORDER_DETAIL_URL + orderid, // order location url can be deconstructed to extract id, or used whole
       method: "GET",
       headers: {'X-Phone-Token': phoneToken, Authorization: "Bearer " + configs.BITY_TOKEN }
     };

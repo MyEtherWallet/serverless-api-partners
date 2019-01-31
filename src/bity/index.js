@@ -8,7 +8,9 @@ import {
   sendReceivedSmsCode,
   createPhoneTransaction,
   getExitOrderDetails,
-  getStatusFiat
+  getStatusFiat,
+  getFiatRates,
+  getCryptoRates
 } from './methods';
 
 export default (req, logger) => {
@@ -60,6 +62,16 @@ export default (req, logger) => {
               break;
             case 'getEstimate':
               getEstimate(body)
+                .then(resolve)
+                .catch(reject);
+              break;
+            case 'getFiatRates':
+              getFiatRates(body)
+                .then(resolve)
+                .catch(reject);
+              break;
+            case 'getCryptoRates':
+              getCryptoRates(body)
                 .then(resolve)
                 .catch(reject);
               break;

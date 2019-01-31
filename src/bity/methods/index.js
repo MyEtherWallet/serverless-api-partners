@@ -6,6 +6,8 @@ import createPhoneTransaction from './createPhoneTransaction';
 import getStatusFiat from './getStatusFiat';
 import getExitOrderDetails from './getExitOrderDetails'
 import getEstimate from './getEstimate'
+import getFiatRates from './getFiatRates'
+import getCryptoRates from './getCryptoRates'
 
 export {
   getEstimate,
@@ -15,5 +17,7 @@ export {
   sendReceivedSmsCode,
   createPhoneTransaction,
   getExitOrderDetails,
-  getStatusFiat
+  getStatusFiat,
+  getFiatRates,
+  getCryptoRates
 };

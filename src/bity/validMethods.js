@@ -1,1 +1,1 @@
-export default ['getEstimate','createTransaction', 'getStatus', 'logInWithPhoneNumber', 'sendReceivedSmsCode', 'createExitToFiatTransaction', 'getExitOrderDetails', 'getStatusFiat'];
+export default ['getEstimate','createTransaction', 'getStatus', 'logInWithPhoneNumber', 'sendReceivedSmsCode', 'createExitToFiatTransaction', 'getExitOrderDetails', 'getStatusFiat', 'getFiatRates', 'getCryptoRates'];

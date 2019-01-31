@@ -2,6 +2,8 @@ require("dotenv").config();
 export default {
   BITY_TOKEN: process.env.BITY_TOKEN || "",
   EXIT_TO_FIAT_API_URL: 'https://bity.com',
+  BITY_SWAP_RATES: '/api/v1/rate2',
+  BITY_EXIT_RATES: '/api/v2/pairs?input_tags=crypto&output_tags=fiat&prices=1',
   EXIT_TO_FIAT_LOGIN_URL: '/api/v2/login/phone',
   EXIT_TO_FIAT_ORDERS_URL: '/api/v2/orders/phone',
   ESTIMATE: '/api/v2/orders/estimate',
