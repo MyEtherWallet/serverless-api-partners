@@ -1,6 +1,16 @@
-import { error } from "../response";
-import allowedMethods from "./validMethods";
-import { createTransaction, getStatus } from "./methods";
+import { error } from '../response';
+import allowedMethods from './validMethods';
+import {
+  getEstimate,
+  createTransaction,
+  getStatus,
+  loginWithPhone,
+  sendReceivedSmsCode,
+  createPhoneTransaction,
+  getExitOrderDetails,
+  getStatusFiat
+} from './methods';
+
 export default (req, logger) => {
   return new Promise((resolve, reject) => {
     if (req.body) {
@@ -12,15 +22,50 @@ export default (req, logger) => {
         if (allowedMethods.indexOf(body.method) == -1)
           reject(error(`Invalid Method - ${body.method}`));
         else {
-          if (body.method === "createTransaction")
-            createTransaction(body)
-              .then(resolve)
-              .catch(reject);
-          else if (body.method === "getStatus")
-            getStatus(body)
-              .then(resolve)
-              .catch(reject);
-          else reject(error("unknown error"));
+          switch (body.method) {
+            case 'createTransaction':
+              createTransaction(body)
+                .then(resolve)
+                .catch(reject);
+              break;
+            case 'getStatus':
+              getStatus(body)
+                .then(resolve)
+                .catch(reject);
+              break;
+            case 'logInWithPhoneNumber':
+              loginWithPhone(body)
+                .then(resolve)
+                .catch(reject);
+              break;
+            case 'sendReceivedSmsCode':
+              sendReceivedSmsCode(body)
+                .then(resolve)
+                .catch(reject);
+              break;
+            case 'createExitToFiatTransaction':
+              createPhoneTransaction(body)
+                .then(resolve)
+                .catch(reject);
+              break;
+            case 'getExitOrderDetails':
+              getExitOrderDetails(body)
+                .then(resolve)
+                .catch(reject);
+              break;
+            case 'getStatusFiat':
+              getStatusFiat(body)
+                .then(resolve)
+                .catch(reject);
+              break;
+            case 'getEstimate':
+              getEstimate(body)
+                .then(resolve)
+                .catch(reject);
+              break;
+            default:
+              reject(error('unknown error'));
+          }
         }
       }
     }
