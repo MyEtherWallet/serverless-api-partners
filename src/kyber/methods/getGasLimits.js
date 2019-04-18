@@ -12,7 +12,7 @@ export default body => {
       API_URL = configs.API_URL_ETH
     }
     const req = {
-      url: API_URL + configs.RATES,
+      url: API_URL + configs.GAS_LIMIT,
       method: 'GET'
     };
     request(req)

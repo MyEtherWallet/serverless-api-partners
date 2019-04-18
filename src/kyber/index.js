@@ -2,7 +2,8 @@ import { error } from '../response';
 import allowedMethods from './validMethods';
 import {
   getSupportedTokens,
-  getCryptoRates
+  getCryptoRates,
+  getGasLimits
 } from './methods';
 
 export default (req, logger) => {
@@ -24,6 +25,11 @@ export default (req, logger) => {
               break;
             case 'getCryptoRates':
               getCryptoRates(body)
+                .then(resolve)
+                .catch(reject);
+              break;
+            case 'getGasLimits':
+              getGasLimits(body)
                 .then(resolve)
                 .catch(reject);
               break;

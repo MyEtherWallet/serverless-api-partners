@@ -1,1 +1,1 @@
-export default ['getSupportedTokens', 'getCryptoRates'];
+export default ['getSupportedTokens', 'getCryptoRates', 'getGasLimits'];

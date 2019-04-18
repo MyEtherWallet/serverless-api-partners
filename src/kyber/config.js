@@ -1,7 +1,9 @@
 require("dotenv").config();
 export default {
   EXIT_TO_FIAT_API_URL: 'https://bity.com',
-  SUPPORTED: '/supported',
+  SUPPORTED: '/currencies',
   RATES: '/pairs',
-  API_URL: "https://tracker.kyber.network/api/tokens"
+  GAS_LIMIT: '/gasLimitConfig',
+  API_URL_ETH: "https://api.kyber.network",
+  API_URL_ROP: "https://ropsten-api.kyber.network"
 };
