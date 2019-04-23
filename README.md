@@ -115,7 +115,7 @@ Response:
  
 ---
 #### getCryptoRates
-
+Request:
 ```
 {
   "jsonrpc": "2.0",
@@ -123,6 +123,40 @@ Response:
   "params": {},
   "id": 83
  }
+```
+
+Response:
+```
+{
+  "jsonrpc": "2.0",
+  "result": {
+    "meta":{
+      "disabled": "CHFUSD"
+      "limit": 1000
+      "next": null
+      "offset": 0
+      "previous": null
+      "total_count": 36
+    },
+    "objects":[
+      {
+        "is_enabled": true
+        "pair": "BTCCHF"
+        "rate": "5470.08780000"
+        "rate_we_buy": "5394.57300000"
+        "rate_we_buy_timestamp": "2019-04-23T00:45:00.404759"
+        "rate_we_sell": "5545.47680000"
+        "rate_we_sell_timestamp": "2019-04-23T00:45:00.404759"
+        "resource_uri": "/api/v1/rate2/BTCCHF/"
+        "source": "BTC"
+        "target": "CHF"
+        "timestamp": "2019-04-23T00:45:00.404759"
+      },
+      ...
+    ]
+  },
+  "id": 83
+}
 ```
 
 ---
@@ -142,6 +176,24 @@ Request:
   "id": 83
  }
 ```
+Response:
+```
+{
+  "jsonrpc": "2.0",
+  "result":{
+    "input": {
+      "currency": "BTC",
+      "amount": "1.00000000"
+    },
+    "output": {
+      "currency": "EUR",
+      "amount": "3087.86"
+    }
+  },
+  "id": 83
+}
+```
+
 [Bity Api](https://doc.bity.com/backend/v2.html#estimate-the-amount-of-an-order)
  
 ---
