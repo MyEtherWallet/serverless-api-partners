@@ -18,7 +18,11 @@ export default body => {
     request(req)
       .then(result => {
         resolve(
-          success(JSON.parse(result))
+          success({
+            jsonrpc: "2.0",
+            result: JSON.parse(result),
+            id: body.id
+          })
         );
       })
       .catch(err => {

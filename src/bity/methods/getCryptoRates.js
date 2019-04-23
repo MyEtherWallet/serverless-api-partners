@@ -3,7 +3,7 @@ import request from '../../request';
 import { error, success } from '../../response';
 
 
-export default () => {
+export default body => {
   return new Promise((resolve, reject) => {
     const req = {
       url: configs.API_URL + configs.BITY_SWAP_RATES,
@@ -12,7 +12,11 @@ export default () => {
     request(req)
       .then(result => {
         resolve(
-          success(JSON.parse(result))
+          success({
+            jsonrpc: "2.0",
+            result: JSON.parse(result),
+            id: body.id
+          })
         );
       })
       .catch(err => {
