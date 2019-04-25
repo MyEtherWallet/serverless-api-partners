@@ -19,6 +19,6 @@ api.post("/kyber", request => {
   return kyber(request, cloudwatch);
 });
 
-api.get("/", () => "MyEtherWallet Partners API Development Version");
+api.get("/", () => "MyEtherWallet Partners API");
 
 module.exports = api;
