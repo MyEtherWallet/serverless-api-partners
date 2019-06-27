@@ -10,7 +10,9 @@ import {
   getExitOrderDetails,
   getStatusFiat,
   getFiatRates,
-  getCryptoRates
+  getCryptoRates,
+  createOrder,
+  getOrderDetails
 } from './methods';
 
 export default (req, logger) => {
@@ -62,6 +64,16 @@ export default (req, logger) => {
               break;
             case 'getEstimate':
               getEstimate(body)
+                .then(resolve)
+                .catch(reject);
+              break;
+            case 'createOrder':
+              createOrder(body)
+                .then(resolve)
+                .catch(reject);
+              break;
+            case 'getOrderDetails':
+              getOrderDetails(body)
                 .then(resolve)
                 .catch(reject);
               break;

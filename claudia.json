@@ -1,7 +1,7 @@
 {
   "lambda": {
     "role": "serverless-api-partners-executor",
-    "name": "dev-serverless-api-partners",
+    "name": "serverless-api-partners-dev",
     "region": "us-east-1"
   },
   "api": {

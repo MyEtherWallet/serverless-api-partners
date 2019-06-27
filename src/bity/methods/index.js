@@ -8,6 +8,8 @@ import getExitOrderDetails from './getExitOrderDetails'
 import getEstimate from './getEstimate'
 import getFiatRates from './getFiatRates'
 import getCryptoRates from './getCryptoRates'
+import createOrder from './createOrder'
+import getOrderDetails from './getOrderDetails'
 
 export {
   getEstimate,
@@ -19,5 +21,7 @@ export {
   getExitOrderDetails,
   getStatusFiat,
   getFiatRates,
-  getCryptoRates
+  getCryptoRates,
+  createOrder,
+  getOrderDetails
 };

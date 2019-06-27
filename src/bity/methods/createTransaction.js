@@ -54,8 +54,11 @@ export default body => {
       payment_method: configs.orderValues[body.params.pair].payment_method,
       crypto_address: body.params.destAddress
     };
+    console.log(req, reqBody); // todo remove dev item
+
     request(req, reqBody)
       .then(result => {
+        // console.log(result); // todo remove dev item
         resolve(
           success({
             jsonrpc: "2.0",
