@@ -22,7 +22,7 @@ export default body => {
       return reject(error('Not supported', body.id));
     }
     const req = {
-      url: configs.API_URL + configs.ESTIMATE,
+      url: configs.API_V2 + configs.ESTIMATE_V2,
       headers: {Authorization: 'Bearer ' + configs.BITY_TOKEN}
     };
 

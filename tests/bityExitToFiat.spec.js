@@ -45,7 +45,7 @@ describe('Bity API', () => {
       pair: 'ETHCHF',
       phoneToken: '', // need to supply a valid phone token to run test
       orderDetails: {
-        'email': 'steveM@MyEtherWallet.com',
+        // 'email': 'steveM@MyEtherWallet.com',
         'input': {
           'amount': '0.1',
           'currency': 'ETH',
@@ -57,8 +57,6 @@ describe('Bity API', () => {
           'type': 'bank_account',
           'iban': 'CH980000MEW0000000009',
           'bic_swift': 'TESTCHBEXXX',
-          'aba_number': '',
-          'sort_code': '',
           'owner': {
             'name': 'FirstName LastName',
             'address': 'Test address',
@@ -113,6 +111,7 @@ describe('Bity API', () => {
       logger
     )
       .then(response => {
+        console.log(response); // todo remove dev item
         const result = response.response.result;
         expect(result).toEqual(expect.anything());
         expect(response.response.id).toBe(85);

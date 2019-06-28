@@ -7,25 +7,25 @@ import SimpleEncryptor from 'simple-encryptor';
 const encryptor = new SimpleEncryptor(configs.encryptionKey);
 const formatResponse = (order, detailsUrl) => {
   console.log(order); // todo remove dev item
-  return order;
-  // const orderJson = JSON.parse(order);
-  // return {
-  //   id: detailsUrl,
-  //   amount: orderJson.output.amount,
-  //   payment_address: orderJson.payment_details.crypto_address,
-  //   payment_amount: orderJson.input.amount,
-  //   status: orderJson.legacy_status,
-  //   validFor: 600,
-  //   timestamp_created: orderJson.timestamp_created + 'Z',
-  //   input: {
-  //     amount: orderJson.input.amount,
-  //     currency: orderJson.input.currency
-  //   },
-  //   output: {
-  //     amount: orderJson.output.amount,
-  //     currency: orderJson.output.currency
-  //   }
-  // };
+  // return order;
+  const orderJson = JSON.parse(order);
+  return {
+    id: detailsUrl,
+    amount: orderJson.output.amount,
+    payment_address: orderJson.payment_details.crypto_address,
+    payment_amount: orderJson.input.amount,
+    status: orderJson.legacy_status,
+    validFor: 600,
+    timestamp_created: orderJson.timestamp_created + 'Z',
+    input: {
+      amount: orderJson.input.amount,
+      currency: orderJson.input.currency
+    },
+    output: {
+      amount: orderJson.output.amount,
+      currency: orderJson.output.currency
+    }
+  };
 };
 
 const requestor = (req) => {
@@ -43,12 +43,26 @@ const requestor = (req) => {
   });
 };
 
+const createPair = (orderDetails) => {
+  return orderDetails.input.currency + orderDetails.output.currency;
+};
+
+
 export default body => {
   return new Promise((resolve, reject) => {
-    if (
-      !configs.fiatValues[body.params.pair] ||
-      !configs.fiatValues[body.params.pair].active
-    ) {
+    const pairOptions = [...Object.keys(configs.orderValues), ...Object.keys(configs.fiatValues)];
+    let notSupported = true;
+    console.log(body.params.orderDetails); // todo remove dev item
+    const pair = createPair(body.params.orderDetails);
+    if(pairOptions.includes(pair)){
+      if(configs.orderValues[pair]){
+        notSupported = !configs.orderValues[pair].active
+      } else if(configs.fiatValues[pair]){
+        notSupported = !configs.fiatValues[pair].active
+      }
+    }
+
+    if (notSupported) {
       error(body.params);
       return reject(error('Not supported', body.id));
     }
@@ -56,7 +70,7 @@ export default body => {
     // const detailsUrl = encryptor.decrypt(body.params.detailsUrl);
     const detailsUrl = body.params.detailsUrl;
     const req = {
-      url: configs.API_URL + configs.ORDER_DETAIL_URL + detailsUrl,
+      url: configs.API_V2 + configs.ORDER_DETAIL_URL_V2 + detailsUrl,
       headers: {
         // 'X-Phone-Token': phoneToken,
         Authorization: 'Bearer ' + configs.BITY_TOKEN

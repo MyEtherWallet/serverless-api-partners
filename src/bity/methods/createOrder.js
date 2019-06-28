@@ -5,7 +5,7 @@ import SimpleEncryptor from 'simple-encryptor';
 
 const encryptor = new SimpleEncryptor(configs.encryptionKey);
 const formatResponse = order => {
-  const statusId = order.headers['location'].replace('/api/v2/orders/', '');
+  const statusId = order.headers['location'].replace('/api/v2/orders/', '').replace('/v2/orders/', '');
   return {
     status_address: statusId, //encryptor.encrypt(statusId),
     created: order.statusCode === 201
@@ -15,22 +15,32 @@ const formatResponse = order => {
 const createPair = (orderDetails) => {
   return orderDetails.input.currency + orderDetails.output.currency;
 };
+
 export default body => {
   return new Promise((resolve, reject) => {
-    if (
-      !configs.fiatValues[createPair(body.params.orderDetails)] ||
-      !configs.fiatValues[createPair(body.params.orderDetails)].active
-    ) {
+    const pairOptions = [...Object.keys(configs.orderValues), ...Object.keys(configs.fiatValues)];
+    let notSupported = true;
+const pair = createPair(body.params.orderDetails);
+    if(pairOptions.includes(pair)){
+      if(configs.orderValues[pair]){
+        notSupported = !configs.orderValues[pair].active
+      } else if(configs.fiatValues[pair]){
+        notSupported = !configs.fiatValues[pair].active
+      }
+    }
+
+    if (notSupported) {
       error(body.params);
       return reject(error('Not supported', body.id));
     }
     const req = {
-      url: configs.API_URL + configs.EXIT_TO_FIAT_ORDERS_URL,
+      url: configs.API_V2 + configs.CREATE_ORDER_V2,
       headers: {
         Authorization: 'Bearer ' + configs.BITY_TOKEN
       }
     };
     const reqBody = body.params.orderDetails;
+
     request(req, reqBody)
       .then(result => {
         resolve(
