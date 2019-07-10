@@ -7,7 +7,6 @@ import SimpleEncryptor from 'simple-encryptor';
 const encryptor = new SimpleEncryptor(configs.encryptionKey);
 const formatResponse = (order, statusId) => {
   console.log(order); // todo remove dev item
-  // return order;
   const orderJson = JSON.parse(order);
   return {
     id: encryptor.encrypt(statusId),
@@ -43,11 +42,6 @@ const requestor = (req) => {
   });
 };
 
-const createPair = (orderDetails) => {
-  return orderDetails.input.currency + orderDetails.output.currency;
-};
-
-
 export default body => {
   return new Promise((resolve, reject) => {
     let statusId;
@@ -59,7 +53,6 @@ export default body => {
     const req = {
       url: configs.API_V2 + configs.ORDER_DETAIL_URL_V2 + statusId,
       headers: {
-        // 'X-Phone-Token': phoneToken,
         Authorization: 'Bearer ' + configs.BITY_TOKEN
       }
     };

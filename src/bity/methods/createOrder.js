@@ -15,7 +15,6 @@ const formatResponse = order => {
 
 const formatFiatResponse = (order, statusId) => {
   console.log('order', order); // todo remove dev item
-  // return order;
   const orderJson = JSON.parse(order);
   return {
     created: true,
@@ -39,55 +38,6 @@ const formatFiatResponse = (order, statusId) => {
   };
 };
 
-const formatCryptoResponse = (order, detailsUrl) => {
-  console.log('order', order); // todo remove dev item
-
-  const orderJson = JSON.parse(order);
-  if (orderJson.payment_details) {
-    return {
-      created: true,
-      requiresSigning: false,
-      id: detailsUrl,
-      reference: detailsUrl,
-      amount: orderJson.output.amount,
-      payment_address: orderJson.payment_details.crypto_address,
-      payment_amount: orderJson.input.amount,
-      status: orderJson.legacy_status,
-      validFor: 600,
-      timestamp_created: orderJson.timestamp_created + 'Z',
-      input: {
-        amount: orderJson.input.amount,
-        currency: orderJson.input.currency
-      },
-      output: {
-        amount: orderJson.output.amount,
-        currency: orderJson.output.currency
-      }
-    };
-  } else {
-    return {
-      created: true,
-      requiresSigning: true,
-      id: detailsUrl,
-      reference: detailsUrl,
-      amount: orderJson.output.amount,
-      message_to_sign: orderJson.message_to_sign.body,
-      signature_submission_url: orderJson.message_to_sign.signature_submission_url,
-      status: orderJson.legacy_status,
-      validFor: 600,
-      timestamp_created: orderJson.timestamp_created + 'Z',
-      input: {
-        amount: orderJson.input.amount,
-        currency: orderJson.input.currency
-      },
-      output: {
-        amount: orderJson.output.amount,
-        currency: orderJson.output.currency
-      }
-    };
-  }
-
-};
 
 const createPair = (orderDetails) => {
   return orderDetails.input.currency + orderDetails.currency;
@@ -171,79 +121,9 @@ const cryptoToFiat = body => {
       .catch(err => {
         reject(error(err, ''));
       });
-
   });
 };
 
-const cryptoToCrypto = body => {
-  return new Promise((resolve, reject) => {
-    const req = {
-      url: configs.API_V2 + configs.CREATE_ORDER_V2,
-      headers: {
-        Authorization: 'Bearer ' + configs.BITY_TOKEN
-      }
-    };
-    // const reqBody = body.params.orderDetails;
-    const reqBody = {
-      contact_person: {
-        email: body.params.orderDetails.email,
-      },
-      input: {
-        amount: body.params.orderDetails.input.amount,
-        currency: body.params.orderDetails.input.currency,
-        type: 'crypto_address',
-        crypto_address: body.params.orderDetails.input.crypto_address
-      },
-      output: {
-        currency: body.params.orderDetails.currency,
-        type: 'bank_account',
-        iban: body.params.orderDetails.iban,
-        bic_swift: body.params.orderDetails.bic_swift,
-        owner: {
-          name: body.params.orderDetails.name,
-          address: body.params.orderDetails.address,
-          address_complement: body.params.orderDetails.address_complement,
-          zip: body.params.orderDetails.zip,
-          city: body.params.orderDetails.city,
-          state: body.params.orderDetails.state,
-          country: body.params.orderDetails.country
-        }
-      }
-
-    };
-
-    request(req, reqBody)
-      .then(result => {
-        const createDetails = formatResponse(result);
-        if (!createDetails.created) {
-          return createDetails;
-        }
-        const statusId = createDetails.id;
-        const req2 = {
-          url: configs.API_V2 + configs.ORDER_DETAIL_URL_V2 + statusId,
-          headers: {
-            Authorization: 'Bearer ' + configs.BITY_TOKEN
-          }
-        };
-        requestor(req2)
-          .then(result => {
-            resolve(
-              success({
-                jsonrpc: '2.0',
-                result: formatCryptoResponse(result, statusId),
-                id: body.id
-              })
-            );
-          })
-          .catch(err => {
-            reject(error(err, '3'));
-          });
-      })
-      .catch(err => {
-        reject(error(err, ''));
-      });
-  });
-};
 
 export default body => {
   const ctf = () => {
@@ -277,8 +157,6 @@ export default body => {
   if (ctf()) {
     return cryptoToFiat(body);
 
-  } else if (ctc()) {
-    return cryptoToCrypto(body);
   } else {
     error(body.params);
     return Promise.reject(error('Not supported', body.id));

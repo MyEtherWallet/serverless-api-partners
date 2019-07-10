@@ -38,7 +38,6 @@ export default body => {
 
     request(req, reqBody)
       .then(result => {
-        console.log(result); // todo remove dev item
         resolve(
           success({
             jsonrpc: '2.0',
