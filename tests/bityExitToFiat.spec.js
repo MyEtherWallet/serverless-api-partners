@@ -47,7 +47,6 @@ describe('Bity API', () => {
       const details = {
         pair: 'ETHBTC',
         orderDetails: {
-          // 'email': 'steveM@MyEtherWallet.com',
           'input': {
             'amount': '0.1',
             'currency': 'ETH',
@@ -132,7 +131,7 @@ describe('Bity API', () => {
         pair: 'ETHCHF',
         phoneToken: '', // need to supply a valid phone token to run test
         orderDetails: {
-          // 'email': 'steveM@MyEtherWallet.com',
+          'email': 'user@MyEtherWallet.com',
           'input': {
             'amount': '0.1',
             'currency': 'ETH',

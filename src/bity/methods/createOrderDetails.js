@@ -6,7 +6,6 @@ import SimpleEncryptor from 'simple-encryptor';
 
 const encryptor = new SimpleEncryptor(configs.encryptionKey);
 const formatResponse = (order, statusId) => {
-  console.log(order); // todo remove dev item
   const orderJson = JSON.parse(order);
   return {
     id: encryptor.encrypt(statusId),

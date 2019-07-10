@@ -14,7 +14,6 @@ const formatResponse = order => {
 };
 
 const formatFiatResponse = (order, statusId) => {
-  console.log('order', order); // todo remove dev item
   const orderJson = JSON.parse(order);
   return {
     created: true,
@@ -62,7 +61,6 @@ const cryptoToFiat = body => {
         Authorization: 'Bearer ' + configs.BITY_TOKEN
       }
     };
-    console.log('body.params.orderDetails', body.params.orderDetails); // todo remove dev item
     const reqBody = {
       contact_person: {
         email: body.params.orderDetails.email,
