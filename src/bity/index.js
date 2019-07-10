@@ -12,7 +12,7 @@ import {
   getFiatRates,
   getCryptoRates,
   createOrder,
-  getOrderDetails
+  createOrderDetails
 } from './methods';
 
 export default (req, logger) => {
@@ -73,7 +73,7 @@ export default (req, logger) => {
                 .catch(reject);
               break;
             case 'getOrderDetails':
-              getOrderDetails(body)
+              createOrderDetails(body)
                 .then(resolve)
                 .catch(reject);
               break;

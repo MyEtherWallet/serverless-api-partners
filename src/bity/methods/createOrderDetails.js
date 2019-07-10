@@ -5,12 +5,12 @@ import {error, success} from '../../response';
 import SimpleEncryptor from 'simple-encryptor';
 
 const encryptor = new SimpleEncryptor(configs.encryptionKey);
-const formatResponse = (order, detailsUrl) => {
+const formatResponse = (order, statusId) => {
   console.log(order); // todo remove dev item
   // return order;
   const orderJson = JSON.parse(order);
   return {
-    id: detailsUrl,
+    id: encryptor.encrypt(statusId),
     amount: orderJson.output.amount,
     payment_address: orderJson.payment_details.crypto_address,
     payment_amount: orderJson.input.amount,
@@ -50,27 +50,14 @@ const createPair = (orderDetails) => {
 
 export default body => {
   return new Promise((resolve, reject) => {
-    const pairOptions = [...Object.keys(configs.orderValues), ...Object.keys(configs.fiatValues)];
-    let notSupported = true;
-    console.log(body.params.orderDetails); // todo remove dev item
-    const pair = createPair(body.params.orderDetails);
-    if(pairOptions.includes(pair)){
-      if(configs.orderValues[pair]){
-        notSupported = !configs.orderValues[pair].active
-      } else if(configs.fiatValues[pair]){
-        notSupported = !configs.fiatValues[pair].active
-      }
+    let statusId;
+    if(body.params.detailsUrl.includes('-')){
+      statusId = body.params.detailsUrl;
+    } else {
+      statusId = encryptor.decrypt(body.params.detailsUrl);
     }
-
-    if (notSupported) {
-      error(body.params);
-      return reject(error('Not supported', body.id));
-    }
-    // const phoneToken = encryptor.decrypt(body.params.phoneToken);
-    // const detailsUrl = encryptor.decrypt(body.params.detailsUrl);
-    const detailsUrl = body.params.detailsUrl;
     const req = {
-      url: configs.API_V2 + configs.ORDER_DETAIL_URL_V2 + detailsUrl,
+      url: configs.API_V2 + configs.ORDER_DETAIL_URL_V2 + statusId,
       headers: {
         // 'X-Phone-Token': phoneToken,
         Authorization: 'Bearer ' + configs.BITY_TOKEN

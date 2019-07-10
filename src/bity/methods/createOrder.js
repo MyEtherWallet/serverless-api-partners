@@ -1,58 +1,286 @@
 import configs from '../config';
 import request from '../bityRequestOnlyStatusResponse';
-import { error, success } from '../../response';
+import {error, success} from '../../response';
 import SimpleEncryptor from 'simple-encryptor';
 
 const encryptor = new SimpleEncryptor(configs.encryptionKey);
+
 const formatResponse = order => {
   const statusId = order.headers['location'].replace('/api/v2/orders/', '').replace('/v2/orders/', '');
   return {
-    status_address: statusId, //encryptor.encrypt(statusId),
+    id: encryptor.encrypt(statusId),
     created: order.statusCode === 201
   };
 };
 
-const createPair = (orderDetails) => {
-  return orderDetails.input.currency + orderDetails.output.currency;
+const formatFiatResponse = (order, statusId) => {
+  console.log('order', order); // todo remove dev item
+  // return order;
+  const orderJson = JSON.parse(order);
+  return {
+    created: true,
+    requiresSigning: false,
+    id: encryptor.encrypt(statusId),
+    reference: encryptor.encrypt(statusId),
+    amount: orderJson.output.amount,
+    payment_address: orderJson.payment_details.crypto_address,
+    payment_amount: orderJson.input.amount,
+    status: orderJson.legacy_status,
+    validFor: 600,
+    timestamp_created: orderJson.timestamp_created + 'Z',
+    input: {
+      amount: orderJson.input.amount,
+      currency: orderJson.input.currency
+    },
+    output: {
+      amount: orderJson.output.amount,
+      currency: orderJson.output.currency
+    }
+  };
 };
 
-export default body => {
-  return new Promise((resolve, reject) => {
-    const pairOptions = [...Object.keys(configs.orderValues), ...Object.keys(configs.fiatValues)];
-    let notSupported = true;
-const pair = createPair(body.params.orderDetails);
-    if(pairOptions.includes(pair)){
-      if(configs.orderValues[pair]){
-        notSupported = !configs.orderValues[pair].active
-      } else if(configs.fiatValues[pair]){
-        notSupported = !configs.fiatValues[pair].active
-      }
-    }
+const formatCryptoResponse = (order, detailsUrl) => {
+  console.log('order', order); // todo remove dev item
 
-    if (notSupported) {
-      error(body.params);
-      return reject(error('Not supported', body.id));
-    }
+  const orderJson = JSON.parse(order);
+  if (orderJson.payment_details) {
+    return {
+      created: true,
+      requiresSigning: false,
+      id: detailsUrl,
+      reference: detailsUrl,
+      amount: orderJson.output.amount,
+      payment_address: orderJson.payment_details.crypto_address,
+      payment_amount: orderJson.input.amount,
+      status: orderJson.legacy_status,
+      validFor: 600,
+      timestamp_created: orderJson.timestamp_created + 'Z',
+      input: {
+        amount: orderJson.input.amount,
+        currency: orderJson.input.currency
+      },
+      output: {
+        amount: orderJson.output.amount,
+        currency: orderJson.output.currency
+      }
+    };
+  } else {
+    return {
+      created: true,
+      requiresSigning: true,
+      id: detailsUrl,
+      reference: detailsUrl,
+      amount: orderJson.output.amount,
+      message_to_sign: orderJson.message_to_sign.body,
+      signature_submission_url: orderJson.message_to_sign.signature_submission_url,
+      status: orderJson.legacy_status,
+      validFor: 600,
+      timestamp_created: orderJson.timestamp_created + 'Z',
+      input: {
+        amount: orderJson.input.amount,
+        currency: orderJson.input.currency
+      },
+      output: {
+        amount: orderJson.output.amount,
+        currency: orderJson.output.currency
+      }
+    };
+  }
+
+};
+
+const createPair = (orderDetails) => {
+  return orderDetails.input.currency + orderDetails.currency;
+};
+
+const requestor = (req) => {
+  var options = {
+    url: req.url,
+    headers: req.headers,
+    method: 'GET'
+  };
+
+  return request(options, 'yes');
+};
+
+
+const cryptoToFiat = body => {
+  return new Promise((resolve, reject) => {
     const req = {
       url: configs.API_V2 + configs.CREATE_ORDER_V2,
       headers: {
         Authorization: 'Bearer ' + configs.BITY_TOKEN
       }
     };
-    const reqBody = body.params.orderDetails;
+    console.log('body.params.orderDetails', body.params.orderDetails); // todo remove dev item
+    const reqBody = {
+      contact_person: {
+        email: body.params.orderDetails.email,
+      },
+      input: {
+        amount: body.params.orderDetails.input.amount,
+        currency: body.params.orderDetails.input.currency,
+        type: 'crypto_address',
+        crypto_address: body.params.orderDetails.input.crypto_address
+      },
+      output: {
+        currency: body.params.orderDetails.currency,
+        type: 'bank_account',
+        iban: body.params.orderDetails.iban,
+        bic_swift: body.params.orderDetails.bic_swift,
+        owner: {
+          name: body.params.orderDetails.name,
+          address: body.params.orderDetails.address,
+          address_complement: body.params.orderDetails.address_complement,
+          zip: body.params.orderDetails.zip,
+          city: body.params.orderDetails.city,
+          state: body.params.orderDetails.state,
+          country: body.params.orderDetails.country
+        }
+      }
+
+    };
 
     request(req, reqBody)
       .then(result => {
-        resolve(
-          success({
-            jsonrpc: '2.0',
-            result: formatResponse(result),
-            id: body.id
+        const createDetails = formatResponse(result);
+        if (!createDetails.created) {
+          return createDetails;
+        }
+        const statusId = encryptor.decrypt(createDetails.id);
+        const req2 = {
+          url: configs.API_V2 + configs.ORDER_DETAIL_URL_V2 + statusId,
+          headers: {
+            Authorization: 'Bearer ' + configs.BITY_TOKEN
+          }
+        };
+        requestor(req2)
+          .then(result => {
+            resolve(
+              success({
+                jsonrpc: '2.0',
+                result: formatFiatResponse(result, statusId),
+                id: body.id
+              })
+            );
           })
-        );
+          .catch(err => {
+            reject(error(err, '3'));
+          });
+      })
+      .catch(err => {
+        reject(error(err, ''));
+      });
+
+  });
+};
+
+const cryptoToCrypto = body => {
+  return new Promise((resolve, reject) => {
+    const req = {
+      url: configs.API_V2 + configs.CREATE_ORDER_V2,
+      headers: {
+        Authorization: 'Bearer ' + configs.BITY_TOKEN
+      }
+    };
+    // const reqBody = body.params.orderDetails;
+    const reqBody = {
+      contact_person: {
+        email: body.params.orderDetails.email,
+      },
+      input: {
+        amount: body.params.orderDetails.input.amount,
+        currency: body.params.orderDetails.input.currency,
+        type: 'crypto_address',
+        crypto_address: body.params.orderDetails.input.crypto_address
+      },
+      output: {
+        currency: body.params.orderDetails.currency,
+        type: 'bank_account',
+        iban: body.params.orderDetails.iban,
+        bic_swift: body.params.orderDetails.bic_swift,
+        owner: {
+          name: body.params.orderDetails.name,
+          address: body.params.orderDetails.address,
+          address_complement: body.params.orderDetails.address_complement,
+          zip: body.params.orderDetails.zip,
+          city: body.params.orderDetails.city,
+          state: body.params.orderDetails.state,
+          country: body.params.orderDetails.country
+        }
+      }
+
+    };
+
+    request(req, reqBody)
+      .then(result => {
+        const createDetails = formatResponse(result);
+        if (!createDetails.created) {
+          return createDetails;
+        }
+        const statusId = createDetails.id;
+        const req2 = {
+          url: configs.API_V2 + configs.ORDER_DETAIL_URL_V2 + statusId,
+          headers: {
+            Authorization: 'Bearer ' + configs.BITY_TOKEN
+          }
+        };
+        requestor(req2)
+          .then(result => {
+            resolve(
+              success({
+                jsonrpc: '2.0',
+                result: formatCryptoResponse(result, statusId),
+                id: body.id
+              })
+            );
+          })
+          .catch(err => {
+            reject(error(err, '3'));
+          });
       })
       .catch(err => {
         reject(error(err, ''));
       });
   });
+};
+
+export default body => {
+  const ctf = () => {
+    const pair = createPair(body.params.orderDetails);
+
+    if (
+      !configs.fiatValues[pair] ||
+      !configs.fiatValues[pair].active
+    ) {
+      return false;
+    }
+    return true;
+  };
+  const ctc = () => {
+    const pair = createPair(body.params.orderDetails);
+
+    if (
+      !configs.orderValues[pair] ||
+      !configs.orderValues[pair].active
+    ) {
+      return false;
+    }
+    return true;
+  };
+
+  if (!ctf() && !ctc()) {
+    error(body.params);
+    return Promise.reject(error('Not supported', body.id));
+  }
+
+  if (ctf()) {
+    return cryptoToFiat(body);
+
+  } else if (ctc()) {
+    return cryptoToCrypto(body);
+  } else {
+    error(body.params);
+    return Promise.reject(error('Not supported', body.id));
+  }
 };
