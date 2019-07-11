@@ -54,6 +54,7 @@ export default body => {
       payment_method: configs.orderValues[body.params.pair].payment_method,
       crypto_address: body.params.destAddress
     };
+
     request(req, reqBody)
       .then(result => {
         resolve(
