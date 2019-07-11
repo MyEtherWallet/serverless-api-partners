@@ -193,7 +193,103 @@ Response:
   "id": 83
 }
 ```
+#### createOrder
 
+Request:
+```
+{
+  "jsonrpc": "2.0",
+  "method": "createOrder",
+  "params": {
+    "orderDetails":{
+      "email": "email@example.com",
+      "input":{
+        "amount": 1,
+        "currency": "ETH",
+        "crypto_address": ""
+      },
+      "currency": "CHF",
+      "iban": "CH3600000000000000000",
+      "bic_swift":"TESTCHBEXXX",
+      "name":"FirstName LastName",
+      "address":"Test address",
+      "address_complement":"", (optional)
+      "zip":"12345",
+      "city":"anytown",
+      "state":"",
+      "country":"CH" (2 char ISO country code)
+    }
+  },
+  "id": 83
+ }
+```
+
+Response:
+```
+{
+  "jsonrpc": "2.0",
+  "result": {
+  "id:"asdffsadfgbg45y45y6uhytu675eye5ewybretyv4w5y6yubv6yw35ywhw",
+  "reference":"asdffsadfgbg45y45y6uhytu675eye5ewybretyv4w5y6yubv6yw35ywhw",
+    "input": {
+      "amount": "0.5",
+      "currency": "ETH"
+    },
+    "output": {
+      "amount": "112.00",
+      "currency": "CHF"
+    },
+    "amount": "104.95",
+    "created": true
+    "payment_address": "0xf35074bbd0a9aee46f4ea137971feec024ab7048",
+    "payment_amount": "0.5",
+    "requiresSigning": false,
+    "validFor": 600,
+    "timestamp_created": "2019-01-24T13:14:07.368Z",
+  }
+  "id": 83
+ }
+ ```
+ 
+---
+#### getOrderDetails
+Request:
+```
+{
+  "jsonrpc": "2.0",
+  "method": "getOrderDetails",
+  "params": {
+    "detailsUrl":"asdffsadfgbg45y45y6uhytu675eye5ewybretyv4w5y6yubv6yw35ywhw"
+  },
+  "id": 83
+ }
+```
+
+Response:
+```
+{
+  "jsonrpc": "2.0",
+  "result": {
+    "id": "asdffsadfgbg45y45y6uhytu675eye5ewybretyv4w5y6yubv6yw35ywhw",
+    "amount": "104.95",
+    "status": "OPEN",
+    "payment_address": "0xf35074bbd0a9aee46f4ea137971feec024ab7048",
+    "payment_amount": "0.5",
+    "validFor": 600,
+    "timestamp_created": "2019-01-24T13:14:07.368Z",
+    "input": {
+      "amount": "0.5",
+      "currency": "ETH"
+    },
+    "output": {
+      "amount": "112.00",
+      "currency": "CHF"
+    }
+  }
+  "id": 83
+ }
+ ``` 
+---
 [Bity Api](https://doc.bity.com/backend/v2.html#estimate-the-amount-of-an-order)
  
 ---
