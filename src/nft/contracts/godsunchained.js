@@ -5,7 +5,7 @@ import api from '../../api';
 export default (token, logger) => {
   return new Promise((resolve, reject) => {
     var options = {
-      url: `https://www.mycryptoheroes.net/metadata/hero/${token}`,
+      url: `https://api.godsunchained.com/card/${token}`,
       method: 'GET'
     };
     request(options, (error, response, body) => {

@@ -15,14 +15,14 @@ describe('NFT API', () => {
       logger
     )
       .then(response => {
-        console.log(response); // todo remove dev item
+        expect(response).toEqual(expect.anything());
 
         done();
       })
       .catch(console.log);
   });
   test('NFT image request cryptoKitties', async done => {
-    expect.assertions(1);
+    expect.assertions(2);
     nft(
       {
         queryString: {
@@ -33,14 +33,36 @@ describe('NFT API', () => {
       logger
     )
       .then(response => {
-        console.log(response); // todo remove dev item
+        expect(response).toEqual(expect.anything());
+        expect(response.headers['content-type']).toEqual('image/svg+xml')
+        console.log(response.headers['content-type']); // todo remove dev item
 
         done();
       })
       .catch(console.log);
   });
+  test('NFT image request cryptoKitties2', async done => {
+    expect.assertions(2);
+    nft(
+      {
+        queryString: {
+          contract: '0x06012c8cf97bead5deae237070f9587f8e7a266d',
+          token: '919050'
+        }
+      },
+      logger
+    )
+      .then(response => {
+        expect(response).toEqual(expect.anything());
+        expect(response.headers['content-type']).toEqual('image/svg+xml')
+
+        console.log(response.headers['content-type']); // todo remove dev item
+        done();
+      })
+      .catch(console.log);
+  });
   test('NFT image request MyCryptoHeroes', async done => {
-    expect.assertions(1);
+    expect.assertions(2);
     nft(
       {
         queryString: {
@@ -51,7 +73,70 @@ describe('NFT API', () => {
       logger
     )
       .then(response => {
-        console.log(response); // todo remove dev item
+        expect(response).toEqual(expect.anything());
+        expect(response.headers['content-type']).toEqual('image/png')
+
+        console.log(response.headers['content-type']); // todo remove dev item
+
+        done();
+      })
+      .catch(console.log);
+  });
+  test('NFT image request godsunchained', async done => {
+    expect.assertions(2);
+    nft(
+      {
+        queryString: {
+          contract: '0x6EbeAf8e8E946F0716E6533A6f2cefc83f60e8Ab',
+          token: '417876'
+        }
+      },
+      logger
+    )
+      .then(response => {
+        expect(response).toEqual(expect.anything());
+        expect(response.headers['content-type']).toEqual('image/png')
+        console.log(response.headers['content-type']); // todo remove dev item
+
+        done();
+      })
+      .catch(console.log);
+  });
+  test('NFT image request cryptoFlowers', async done => {
+    expect.assertions(2);
+    nft(
+      {
+        queryString: {
+          contract: '0x8bc67d00253fd60b1afcce88b78820413139f4c6',
+          token: '23479'
+        }
+      },
+      logger
+    )
+      .then(response => {
+        expect(response).toEqual(expect.anything());
+        expect(response.headers['content-type']).toEqual('image/png')
+        console.log(response.headers['content-type']); // todo remove dev item
+
+        done();
+      })
+      .catch(console.log);
+  });
+  test('NFT image request etheremon', async done => {
+    expect.assertions(2);
+    nft(
+      {
+        queryString: {
+          contract: '0x5d00d312e171be5342067c09bae883f9bcb2003b',
+          token: '10007'
+        }
+      },
+      logger
+    )
+      .then(response => {
+        expect(response).toEqual(expect.anything());
+        expect(response.headers['content-type']).toEqual('image/png')
+        console.log(response.headers['content-type']); // todo remove dev item
 
         done();
       })
