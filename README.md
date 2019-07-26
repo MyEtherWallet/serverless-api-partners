@@ -571,7 +571,7 @@ Request:
 ```
 {
   "jsonrpc": "2.0",
-  "method": "tokens",
+  "method": "getSupportedTokens",
   "params": [],
   "id": 85
 }
@@ -601,7 +601,7 @@ Request:
 ```
 {
   "jsonrpc": "2.0",
-  "method": "swap",
+  "method": "createOrder",
   "params": {
     "apiKey": "",
     "partnerContract": "0x0d8775f648430679a709e98d2b0cb6250d2887ef",
@@ -614,10 +614,6 @@ Request:
     "swap": {
         "sourceAsset": "0x0f5d2fb29fb7d3cfee444a200298f468908cc942",
         "destinationAsset": "0x0000000000000000000000000000000000000000",
-        "sourceAmount": 15, // send either sourceAmount OR destinationAmount, not both
-        "minFillPercent": 5,
-        "maxMarketSlippagePercent": 5,
-        "maxExecutionSlippagePercent": 5,
         "destinationAmount": 100000000000000000,
         "isOptional": false
     }
