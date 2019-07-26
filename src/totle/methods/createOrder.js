@@ -10,12 +10,12 @@ export default body => {
     };
     body.apiKey = configs.TOTLE_API_KEY
 
-    request(req, body)
+    request(req, body.params)
       .then(result => {
         resolve(
           success({
             jsonrpc: "2.0",
-            result: JSON.parse(result),
+            result,
             id: body.id
           })
         );
