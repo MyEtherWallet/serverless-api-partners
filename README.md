@@ -1,6 +1,6 @@
 # Serverless APIs for MEW Partners
 
-Serverless api to communicate with Changelly/Bity api
+Serverless api to communicate with Bity/Changelly/Kyber/Totle api
 
 # Live endpoint
 
@@ -24,6 +24,9 @@ Serverless api to communicate with Changelly/Bity api
 - **[getSupportedTokens](#getSupportedTokens)**<br>
 - **[getCryptoRates](#getCryptoRates)**<br>
 - **[getGasLimits](#getGasLimits)**<br>
+**[Totle Network API](#Totle-API)**<br>
+- **[getSupportedTokens](#getSupportedTokens)**<br>
+- **[createOrder](#createOrder)**<br>
 
  ---
 # Bity API
@@ -553,6 +556,222 @@ Except `api-key` and `sign` headers are not required
   "jsonrpc": "2.0",
   "method": "getGasLimits",
   "params": [],
+  "id": 85
+}
+```
+
+# Totle API
+
+> `https://swap.mewapi.io/totle`
+
+#### getSupportedTokens
+
+Request:
+```
+{
+  "jsonrpc": "2.0",
+  "method": "tokens",
+  "params": [],
+  "id": 85
+}
+```
+
+Response:
+```
+{
+  "jsonrpc": "2.0",
+  "result": {
+    "tokens": [{
+      "name": "DATAcoin",
+      "symbol": "DATA",
+      "address": "0x0cf0ee63788a0849fe5297f3407f701e122cc023",
+      "decimals": 18,
+      "tradable": true
+    }]
+  },
+  "id": 85
+}
+```
+
+#### createOrder
+
+Request:
+
+```
+{
+  "jsonrpc": "2.0",
+  "method": "swap",
+  "params": {
+    "apiKey": "",
+    "partnerContract": "0x0d8775f648430679a709e98d2b0cb6250d2887ef",
+    "address": "0x0d8775f648430679a709e98d2b0cb6250d2887ef",
+    "config": {
+        "transactions": true,
+        "fillNonce": false,
+        "skipBalanceChecks": false
+    },
+    "swap": {
+        "sourceAsset": "0x0f5d2fb29fb7d3cfee444a200298f468908cc942",
+        "destinationAsset": "0x0000000000000000000000000000000000000000",
+        "sourceAmount": 15, // send either sourceAmount OR destinationAmount, not both
+        "minFillPercent": 5,
+        "maxMarketSlippagePercent": 5,
+        "maxExecutionSlippagePercent": 5,
+        "destinationAmount": 100000000000000000,
+        "isOptional": false
+    }
+  },
+  "id": 85
+}
+```
+
+Response:
+```
+{
+  "jsonrpc": "2.0",
+  "result": {
+    "success": true,
+    "response": {
+        "id": "0x4e7ed7b2df7f429f9aeaa9a00cff25555e518f797a694e7fa59f9880c80a7887",
+        "summary": [
+            {
+                "sourceAsset": {
+                    "address": "0x0f5d2fb29fb7d3cfee444a200298f468908cc942",
+                    "symbol": "MANA",
+                    "decimals": "18"
+                },
+                "sourceAmount": "100000000000000000",
+                "destinationAsset": {
+                    "address": "0x0000000000000000000000000000000000000000",
+                    "symbol": "ETH",
+                    "decimals": "18"
+                },
+                "destinationAmount": "19387450738027",
+                "notes": [],
+                "rate": "0.00019387450738027",
+                "market": {
+                    "rate": "0.00019387450738027",
+                    "slippage": "0%"
+                },
+                "runnerUpRoutes": [],
+                "trades": [
+                    {
+                        "sourceAsset": {
+                            "address": "0x0f5d2fb29fb7d3cfee444a200298f468908cc942",
+                            "symbol": "MANA",
+                            "decimals": "18"
+                        },
+                        "sourceAmount": "100000000000000000",
+                        "destinationAsset": {
+                            "address": "0x0000000000000000000000000000000000000000",
+                            "symbol": "ETH",
+                            "decimals": "18"
+                        },
+                        "destinationAmount": "19387450738027",
+                        "orders": [
+                            {
+                                "sourceAsset": {
+                                    "address": "0x0f5d2fb29fb7d3cfee444a200298f468908cc942",
+                                    "symbol": "MANA",
+                                    "decimals": "18"
+                                },
+                                "sourceAmount": "100000000000000000",
+                                "destinationAsset": {
+                                    "address": "0x0000000000000000000000000000000000000000",
+                                    "symbol": "ETH",
+                                    "decimals": "18"
+                                },
+                                "destinationAmount": "19485367155895",
+                                "exchange": {
+                                    "id": 2,
+                                    "name": "Kyber"
+                                },
+                                "fee": {
+                                    "percentage": "0",
+                                    "amount": "0",
+                                    "asset": {
+                                        "address": "0x0f5d2fb29fb7d3cfee444a200298f468908cc942",
+                                        "symbol": "MANA",
+                                        "decimals": "18"
+                                    }
+                                }
+                            }
+                        ],
+                        "runnerUpOrders": [
+                            {
+                                "sourceAsset": {
+                                    "address": "0x0f5d2fb29fb7d3cfee444a200298f468908cc942",
+                                    "symbol": "MANA",
+                                    "decimals": "18"
+                                },
+                                "sourceAmount": "100000000000000000",
+                                "destinationAsset": {
+                                    "address": "0x0000000000000000000000000000000000000000",
+                                    "symbol": "ETH",
+                                    "decimals": "18"
+                                },
+                                "destinationAmount": "19381017264445",
+                                "exchange": {
+                                    "id": 4,
+                                    "name": "Bancor"
+                                },
+                                "fee": {
+                                    "percentage": "0",
+                                    "amount": "0",
+                                    "asset": {
+                                        "address": "0x0f5d2fb29fb7d3cfee444a200298f468908cc942",
+                                        "symbol": "MANA",
+                                        "decimals": "18"
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                ],
+                "totleFee": {
+                    "asset": {
+                        "address": "0x0000000000000000000000000000000000000000",
+                        "symbol": "ETH",
+                        "decimals": "18"
+                    },
+                    "percentage": "0.5",
+                    "amount": "97916417868"
+                },
+                "partnerFee": {
+                    "asset": {
+                        "address": "0x0000000000000000000000000000000000000000",
+                        "symbol": "ETH",
+                        "decimals": "18"
+                    },
+                    "percentage": "0",
+                    "amount": "0"
+                }
+            }
+        ],
+        "transactions": [
+            {
+                "type": "swap",
+                "tx": {
+                    "to": "0xcd2053679De3BCf2b7E2C2EfB6B499C57701222c",
+                    "from": "0xd18cec4907b50f4eda4a197a50b619741e921b4d",
+                    "value": "0",
+                    "data": "0xa32305a2000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000e000000000000000000000000076edf2d56f60f3717c59e90b1c3cc95cd574272900000000000000000000000000000000000000000000000000000000007d86474e7ed7b2df7f429f9aeaa9a00cff25555e518f797a694e7fa59f9880c80a7887000000000000000000000000000000000000000000000000000000000000001c96c16c4c21e7bdb8773e75fa46422c44a9829ad7fbba2672c87401556d441e9f5726e940e03eee6646bcf8159db1dffea40b2ca25a7fee2720e2fdb092a9cee600000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000009eb1ef0770c30000000000000000000000000000000000000000000000000000111a92a6a20f000000000000000000000000000000000000000000000000016345785d8a000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000d18cec4907b50f4eda4a197a50b619741e921b4d0000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000200000000000000000000000000f5d2fb29fb7d3cfee444a200298f468908cc9420000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000016345785d8a0000000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000a00000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000e000000000000000000000000077b26c9f9b87668b66db65dce7cc2b392ff59966000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000400000000000000000000000000f5d2fb29fb7d3cfee444a200298f468908cc9420000000000000000000000000000000000000000000000000000000000000000000000000000000000000000716156326b3dd55ed5e795ac5f19afdaab866daf000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000e0000000000000000000000000967f1c667fc490ddd2fb941e3a461223c03d40e90000000000000000000000000f5d2fb29fb7d3cfee444a200298f468908cc94200000000000000000000000079d83b390cf0edf86b9efbe47b556cc6e20926ac0000000000000000000000001f573d6fb3f13d689ff844b4ce37794d79a7ff1c0000000000000000000000001f573d6fb3f13d689ff844b4ce37794d79a7ff1c000000000000000000000000c0829421c1d260bd3cb3e0f06cfe2d52db2ce3150000000000000000000000000000000000000000000000000000000000000000",
+                    "gasPrice": "8734375000",
+                    "gas": "900000"
+                }
+            }
+        ],
+        "rateLimit": {
+            "callsMade": 10,
+            "callsLeft": 10
+        },
+        "signature": "",
+        "expiration": {
+            "blockNumber": 8226375,
+            "estimatedTimestamp": ""
+        }
+    }
+  },
   "id": 85
 }
 ```
