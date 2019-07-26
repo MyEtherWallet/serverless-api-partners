@@ -24,6 +24,7 @@ Serverless api to communicate with Bity/Changelly/Kyber/Totle api
 - **[getSupportedTokens](#getSupportedTokens)**<br>
 - **[getCryptoRates](#getCryptoRates)**<br>
 - **[getGasLimits](#getGasLimits)**<br>
+
 **[Totle Network API](#Totle-API)**<br>
 - **[getSupportedTokens](#getSupportedTokens)**<br>
 - **[createOrder](#createOrder)**<br>
