@@ -1,12 +1,13 @@
-import cryptoKitties from './contracts/cryproKitties'
-import mycryptoheroes from './contracts/mycryptoheroes'
-import godsunchained from './contracts/godsunchained'
-import metadata from './contracts/721Metadata'
-import proxyPass from './proxy'
-import configs from './config'
-import request from 'request';
+import {
+  cryptoKitties,
+  nonStandardContracts,
+  mycryptoheroes,
+  godsunchained,
+  metadata
+} from './contracts';
+import proxyPass from './proxy';
+import configs from './config';
 import {error} from '../response';
-import api from '../api';
 
 
 export default (req, logger) => {
@@ -17,24 +18,14 @@ export default (req, logger) => {
       proxyPass(query.proxy, logger)
         .then(resolve)
         .catch(reject);
-/*      var options = {
-        url: 'https://' + query.proxy,
-        method: 'GET'
-      };
-      // resolve(api.proxyRouter())
-      request(options, (error, response, body) => {
-        if (logger) logger.process({method: 'nft'});
-        if (error) reject(error);
-        else resolve(new api.ApiResponse(
-          body,
-          response.headers,
-          200
-        ));
-      });*/
-    } else if(query.contract) {
+    } else if (query.nonStandardContract) {
+      nonStandardContracts(query.nonStandardContract, query.address, query.offset)
+        .then(resolve)
+        .catch(reject);
+    } else if (query.contract) {
       const contract = query.contract;
       const contractDetails = configs.contracts.find(entry => entry.contractAddress.toLowerCase() === contract.toLowerCase());
-      if(contractDetails){
+      if (contractDetails) {
         metadata(query.token, contractDetails)
           .then(resolve)
           .catch(reject);
@@ -48,7 +39,7 @@ export default (req, logger) => {
             break;
           case '0x06012c8cf97bead5deae237070f9587f8e7a266d':
           case 'cryptokitties':
-            cryptoKitties(query.token)
+            cryptoKitties(query.token, '0x06012c8cf97bead5deae237070f9587f8e7a266d')
               .then(resolve)
               .catch(reject);
             break;

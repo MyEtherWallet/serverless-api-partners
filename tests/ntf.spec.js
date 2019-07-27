@@ -35,8 +35,6 @@ describe('NFT API', () => {
       .then(response => {
         expect(response).toEqual(expect.anything());
         expect(response.headers['content-type']).toEqual('image/svg+xml')
-        console.log(response.headers['content-type']); // todo remove dev item
-
         done();
       })
       .catch(console.log);
@@ -55,8 +53,6 @@ describe('NFT API', () => {
       .then(response => {
         expect(response).toEqual(expect.anything());
         expect(response.headers['content-type']).toEqual('image/svg+xml')
-
-        console.log(response.headers['content-type']); // todo remove dev item
         done();
       })
       .catch(console.log);
@@ -75,9 +71,6 @@ describe('NFT API', () => {
       .then(response => {
         expect(response).toEqual(expect.anything());
         expect(response.headers['content-type']).toEqual('image/png')
-
-        console.log(response.headers['content-type']); // todo remove dev item
-
         done();
       })
       .catch(console.log);
@@ -96,7 +89,6 @@ describe('NFT API', () => {
       .then(response => {
         expect(response).toEqual(expect.anything());
         expect(response.headers['content-type']).toEqual('image/png')
-        console.log(response.headers['content-type']); // todo remove dev item
 
         done();
       })
@@ -116,7 +108,6 @@ describe('NFT API', () => {
       .then(response => {
         expect(response).toEqual(expect.anything());
         expect(response.headers['content-type']).toEqual('image/png')
-        console.log(response.headers['content-type']); // todo remove dev item
 
         done();
       })
@@ -136,7 +127,6 @@ describe('NFT API', () => {
       .then(response => {
         expect(response).toEqual(expect.anything());
         expect(response.headers['content-type']).toEqual('image/png')
-        console.log(response.headers['content-type']); // todo remove dev item
 
         done();
       })
