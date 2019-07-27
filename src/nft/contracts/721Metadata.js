@@ -12,7 +12,6 @@ export default (token, contractDetails, logger) => {
       url: `${contractDetails.metadataAddress}${token}`,
       method: 'GET'
     };
-    const requestAlt = request.defaults({encoding: null});
     request(options, (error, response, body) => {
       if (error) reject(error);
       if (logger) logger.process(JSON.parse(body));
@@ -37,13 +36,11 @@ export default (token, contractDetails, logger) => {
         method: 'GET',
         encoding: null
       };
-      console.log(imageUri); // todo remove dev item
-
       request(optionsImage, (error, response, body) => {
-        // console.log(body); // todo remove dev item
         let data = body;
         if (response.headers['content-type'].includes('svg')) {
-          data = new Buffer(body).toString()
+          data = 'data:' + response.headers['content-type'] + ';base64,' + new Buffer(body).toString('base64');
+
         } else {
           data = 'data:' + response.headers['content-type'] + ';base64,' + new Buffer(body).toString('base64');
         }
@@ -51,7 +48,9 @@ export default (token, contractDetails, logger) => {
         if (error) reject(error);
         else resolve(new api.ApiResponse(
           data,
-          response.headers,
+          {
+            'content-type': response.headers['content-type']
+          },
           200
         ));
       });
