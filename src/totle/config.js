@@ -4,6 +4,5 @@ export default {
   TOTLE_API_KEY: process.env.TOTLE_API_KEY || '',
   SUPPORTED: '/tokens',
   SWAP: '/swap',
-  API_INFO_URL_ETH: 'https://services.totlesystem.com',
   API_URL_ETH: 'https://api.totle.com'
 };

@@ -6,7 +6,7 @@ import { error, success } from '../../response';
 export default body => {
   return new Promise((resolve, reject) => {
     const req = {
-      url: configs.API_INFO_URL_ETH + configs.SUPPORTED,
+      url: configs.API_URL_ETH + configs.SUPPORTED,
       method: 'GET'
     };
     request(req)
