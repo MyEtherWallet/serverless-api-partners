@@ -1,12 +1,5 @@
 import request from 'request';
 import api from '../../api';
-import {error as resError} from '../../response';
-
-
-const getNestedObject = (nestedObj, pathArr) => {
-  return pathArr.reduce((obj, key) =>
-    (obj && obj[key] !== 'undefined') ? obj[key] : undefined, nestedObj);
-};
 
 export default (metaUrl, logger) => {
   return new Promise((resolve, reject) => {

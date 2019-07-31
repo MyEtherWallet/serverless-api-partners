@@ -1,8 +1,6 @@
 import {
   cryptoKitties,
   nonStandardContracts,
-  mycryptoheroes,
-  godsunchained,
   staticmetadata,
   metadata
 } from './contracts';
@@ -16,7 +14,7 @@ export default (req, logger) => {
   return new Promise((resolve, reject) => {
     const query = req.queryString;
     if (logger) logger.process({method: 'nft'});
-    if(query.supported){
+    if (query.supported) {
       resolve(new api.ApiResponse(
         configs.contracts,
         {
@@ -29,10 +27,10 @@ export default (req, logger) => {
         .then(resolve)
         .catch(reject);
     } else if (query.nonStandardContract) {
-      nonStandardContracts(query.nonStandardContract, query.address, query.offset)
+      nonStandardContracts(query.nonStandardContract, query.address, query.offset, query.limit)
         .then(resolve)
         .catch(reject);
-    }  else if(query.metadataUri){
+    } else if (query.metadataUri) {
       metadata(query.metadataUri)
         .then(resolve)
         .catch(reject);

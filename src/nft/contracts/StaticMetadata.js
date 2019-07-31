@@ -10,6 +10,7 @@ const getNestedObject = (nestedObj, pathArr) => {
 
 export default (token, contractDetails, logger) => {
   return new Promise((resolve, reject) => {
+    if(!contractDetails.active) reject('NFT currently not available on MEW');
     const options = {
       url: `${contractDetails.metadataAddress}${token}`,
       method: 'GET'
