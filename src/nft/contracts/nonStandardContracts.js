@@ -3,7 +3,8 @@ import api from '../../api';
 import {error} from '../../response';
 
 
-export default (contract, address, offset = 0) => {
+export default (contract, address, offset = 0, limit = 200) => {
+
   switch (contract) {
     case '0x06012c8cf97bead5deae237070f9587f8e7a266d':
       return new Promise((resolve, reject) => {
@@ -16,7 +17,7 @@ export default (contract, address, offset = 0) => {
           else resolve(new api.ApiResponse(
             body,
             {
-              contentType: "application/json"
+              contentType: 'application/json'
             },
             200
           ));

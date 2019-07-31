@@ -8,19 +8,25 @@ const getNestedObject = (nestedObj, pathArr) => {
     (obj && obj[key] !== 'undefined') ? obj[key] : undefined, nestedObj);
 };
 
-export default (metaUrl, logger) => {
+export default (token, contractDetails, logger) => {
   return new Promise((resolve, reject) => {
     const options = {
-      url: `${metaUrl}`,
+      url: `${contractDetails.metadataAddress}${token}`,
       method: 'GET'
     };
-
     request(options, (error, response, body) => {
       if (error) reject(error);
       if (logger) logger.process(JSON.parse(body));
       let resBody = JSON.parse(body);
+      if (contractDetails.depth > 0) {
+        const replacement = contractDetails.keys.indexOf('@tokenvalue@');
+        if (replacement >= 0) {
+          contractDetails.keys.splice(replacement, 1, token);
+        }
+        resBody = getNestedObject(resBody, contractDetails.keys);
+      }
 
-      const imageUri = resBody['image_url'] || resBody['image'];
+      const imageUri = resBody[contractDetails.imageKey];
       if (!imageUri) {
         if (JSON.parse(body).message) {
           reject(JSON.parse(body).message);
@@ -34,23 +40,20 @@ export default (metaUrl, logger) => {
       };
       request(optionsImage, (error, response, body) => {
         let data = body;
-        if (error) reject(error);
-        try {
+        try{
           data = 'data:' + response.headers['content-type'] + ';base64,' + new Buffer(body).toString('base64');
-        } catch (e) {
-          reject(e);
-        }
-        try {
-          resolve(new api.ApiResponse(
+          if (error) reject(error);
+          else resolve(new api.ApiResponse(
             data,
             {
-              'content-type': 'text/html'
+              'content-type': response.headers['content-type']
             },
             200
           ));
-        } catch (e) {
-          reject(e);
+        } catch (e){
+          reject(resError(e))
         }
+
       });
 
     });

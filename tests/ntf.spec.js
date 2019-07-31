@@ -4,6 +4,26 @@ import { consoleLogger } from '../src/loggers';
 const logger = new consoleLogger('BITY');
 describe('NFT API', () => {
   let orderId = null;
+  test('NFT Get all kitties', async done => {
+    expect.assertions(1);
+    nft(
+      {
+        queryString: {
+          nonStandardContract: '0x06012c8cf97bead5deae237070f9587f8e7a266d',
+          address: '0x2f261a227480b7d1802433d05a92a27bab645032',
+          offset: 0
+        }
+      },
+      logger
+    )
+      .then(response => {
+        console.log(response); // todo remove dev item
+        expect(response).toEqual(expect.anything());
+
+        done();
+      })
+      .catch(console.log);
+  }, 15000);
   test('NFT Proxy', async done => {
     expect.assertions(1);
     nft(
