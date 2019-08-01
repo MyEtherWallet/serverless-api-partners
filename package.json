@@ -26,18 +26,18 @@
   },
   "homepage": "https://github.com/MyEtherWallet/serverless-api-partners#readme",
   "devDependencies": {
-    "@babel/cli": "^7.1.5",
-    "@babel/core": "^7.1.6",
-    "@babel/preset-env": "^7.1.6",
+    "@babel/cli": "^7.5.5",
+    "@babel/core": "^7.5.5",
+    "@babel/preset-env": "^7.5.5",
     "babel-core": "^7.0.0-bridge.0",
     "babel-jest": "^23.6.0",
-    "claudia": "^5.2.0",
+    "claudia": "^5.6.0",
     "jest": "^23.6.0"
   },
   "dependencies": {
-    "aws-sdk": "^2.362.0",
-    "claudia-api-builder": "^4.1.1",
-    "dotenv": "^6.1.0",
+    "aws-sdk": "^2.503.0",
+    "claudia-api-builder": "^4.1.2",
+    "dotenv": "^6.2.0",
     "request": "^2.88.0",
     "simple-encryptor": "^2.0.0"
   }
