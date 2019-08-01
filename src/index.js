@@ -1,8 +1,8 @@
 import api from "./api";
 import changelly from "./changelly";
 import bity from "./bity";
-import kyber from './kyber'
-import nft from './nft'
+import kyber from "./kyber";
+import nft from "./nft";
 
 import { cloudWatchLogger } from "./loggers";
 
@@ -21,7 +21,7 @@ api.post("/kyber", request => {
   return kyber(request, cloudwatch);
 });
 
-api.get("/nft", (request) => {
+api.get("/nft", request => {
   const cloudwatch = new cloudWatchLogger("NFT");
   return nft(request, cloudwatch);
 });

@@ -9,7 +9,7 @@
   "scripts": {
     "start": "babel src --out-dir dist",
     "create": "npm run start && claudia create --profile claudia --region us-east-1 --api-module dist/index",
-    "update": "npm run start && claudia update --profile claudia --version production",
+    "update": "npm run start && claudia update --profile claudia --version latest",
     "updateDev": "npm run start && claudia update --profile claudia --version testing",
     "test": "jest tests"
   },
