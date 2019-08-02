@@ -2,7 +2,8 @@ import {
   cryptoKitties,
   nonStandardContracts,
   staticmetadata,
-  metadata
+  metadata,
+  imageDownloader
 } from "./contracts";
 import proxyPass from "./proxy";
 import configs from "./config";
@@ -10,7 +11,10 @@ import { error } from "../response";
 import api from "../api";
 
 // Need to implement guards
-export default (req, logger) => {
+const processNFTImage = (req, logger) => {
+  return imageDownloader(req.queryString.path);
+};
+const processNFT = (req, logger) => {
   return new Promise((resolve, reject) => {
     const query = req.queryString;
     if (logger) logger.process({ method: "nft" });
@@ -68,3 +72,4 @@ export default (req, logger) => {
     }
   });
 };
+export { processNFT, processNFTImage };

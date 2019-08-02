@@ -2,7 +2,7 @@ import api from "./api";
 import changelly from "./changelly";
 import bity from "./bity";
 import kyber from "./kyber";
-import nft from "./nft";
+import { processNFT, processNFTImage } from "./nft";
 
 import { cloudWatchLogger } from "./loggers";
 
@@ -23,8 +23,19 @@ api.post("/kyber", request => {
 
 api.get("/nft", request => {
   const cloudwatch = new cloudWatchLogger("NFT");
-  return nft(request, cloudwatch);
+  return processNFT(request, cloudwatch);
 });
+api.setBinaryMediaTypes(["*/*"]);
+api.get(
+  "/nft/image",
+  request => {
+    const cloudwatch = new cloudWatchLogger("NFT");
+    return processNFTImage(request, cloudwatch);
+  },
+  {
+    success: { contentType: "image/png", contentHandling: "CONVERT_TO_BINARY" }
+  }
+);
 
 api.get("/", () => "MyEtherWallet Partners API");
 
