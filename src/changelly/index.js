@@ -11,7 +11,7 @@ export default (req, logger) => {
       if (Array.isArray(body)) {
         reject(error(`Invalid Request - ${body}`));
       } else {
-        if (allowedMethods.indexOf(body.method) == -1)
+        if (allowedMethods.indexOf(body.method) === -1)
           reject(error(`Invalid Method - ${body.method}`));
         else {
           const req = {
@@ -29,6 +29,8 @@ export default (req, logger) => {
               resolve(success(result));
             })
             .catch(err => {
+              console.log(err);
+              if(logger) logger.errorReporter('changelly');
               reject(error(err, ""));
             });
         }

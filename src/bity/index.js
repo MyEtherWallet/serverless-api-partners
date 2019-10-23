@@ -17,6 +17,10 @@ import {
 
 export default (req, logger) => {
   return new Promise((resolve, reject) => {
+    const errorLogging = error => {
+      if(logger) logger.errorReporter('bity');
+      reject(error)
+    };
     if (req.body) {
       let body = req.body;
       if (logger) logger.process(body);
@@ -30,62 +34,62 @@ export default (req, logger) => {
             case 'createTransaction':
               createTransaction(body)
                 .then(resolve)
-                .catch(reject);
+                .catch(errorLogging);
               break;
             case 'getStatus':
               getStatus(body)
                 .then(resolve)
-                .catch(reject);
+                .catch(errorLogging);
               break;
             case 'logInWithPhoneNumber':
               loginWithPhone(body)
                 .then(resolve)
-                .catch(reject);
+                .catch(errorLogging);
               break;
             case 'sendReceivedSmsCode':
               sendReceivedSmsCode(body)
                 .then(resolve)
-                .catch(reject);
+                .catch(errorLogging);
               break;
             case 'createExitToFiatTransaction':
               createPhoneTransaction(body)
                 .then(resolve)
-                .catch(reject);
+                .catch(errorLogging);
               break;
             case 'getExitOrderDetails':
               getExitOrderDetails(body)
                 .then(resolve)
-                .catch(reject);
+                .catch(errorLogging);
               break;
             case 'getStatusFiat':
               getStatusFiat(body)
                 .then(resolve)
-                .catch(reject);
+                .catch(errorLogging);
               break;
             case 'getEstimate':
               getEstimate(body)
                 .then(resolve)
-                .catch(reject);
+                .catch(errorLogging);
               break;
             case 'createOrder':
               createOrder(body)
                 .then(resolve)
-                .catch(reject);
+                .catch(errorLogging);
               break;
             case 'getOrderDetails':
               createOrderDetails(body)
                 .then(resolve)
-                .catch(reject);
+                .catch(errorLogging);
               break;
             case 'getFiatRates':
               getFiatRates(body)
                 .then(resolve)
-                .catch(reject);
+                .catch(errorLogging);
               break;
             case 'getCryptoRates':
               getCryptoRates(body)
                 .then(resolve)
-                .catch(reject);
+                .catch(errorLogging);
               break;
             default:
               reject(error('unknown error'));

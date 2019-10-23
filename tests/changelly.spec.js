@@ -18,9 +18,35 @@ describe("Changelly API", () => {
     )
       .then(response => {
         const result = response.response.result;
+        console.log(result); // todo remove dev item
         expect(result).toContain("eth");
         expect(result.length).toBeGreaterThan(10);
         expect(response.response.id).toBe(83);
+        done();
+      })
+      .catch(console.log);
+  });
+  test("GetRate", async done => {
+    expect.assertions(1);
+    changelly(
+      {
+        body: {
+          jsonrpc: "2.0",
+          method: "getExchangeAmount",
+          params: [ {
+            from: 'ETH',
+            to: 'BTC',
+            amount: 1
+          }],
+          id: 83
+        }
+      },
+      logger
+    )
+      .then(response => {
+        const result = response.response.result;
+        console.log(result); // todo remove dev item
+        expect(result[0].from).toContain("eth");
         done();
       })
       .catch(console.log);
