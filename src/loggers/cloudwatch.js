@@ -58,7 +58,7 @@ class Logger {
     }
   }
   errorReporter(partnerName){
-    addToCloudWatch([getLogObject(partnerName)], "PARTNER-API-ERRORS");
+    addToCloudWatch([getLogObject(partnerName)], "PARTNER_API_ERRORS");
   }
 }
 

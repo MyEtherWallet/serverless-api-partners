@@ -18,7 +18,7 @@ import {
 export default (req, logger) => {
   return new Promise((resolve, reject) => {
     const errorLogging = error => {
-      logger.errorReporter('bity');
+      if(logger) logger.errorReporter('bity');
       reject(error)
     };
     if (req.body) {

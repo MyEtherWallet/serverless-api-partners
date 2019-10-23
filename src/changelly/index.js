@@ -30,7 +30,7 @@ export default (req, logger) => {
             })
             .catch(err => {
               console.log(err);
-              logger.errorReporter('changelly');
+              if(logger) logger.errorReporter('changelly');
               reject(error(err, ""));
             });
         }
