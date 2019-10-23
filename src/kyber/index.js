@@ -8,6 +8,10 @@ import {
 
 export default (req, logger) => {
   return new Promise((resolve, reject) => {
+    const errorLogging = error => {
+      logger.errorReporter('kyber');
+      reject(error)
+    };
     if (req.body) {
       let body = req.body;
       if (logger) logger.process(body);
@@ -21,17 +25,17 @@ export default (req, logger) => {
             case 'getSupportedTokens':
               getSupportedTokens(body)
                 .then(resolve)
-                .catch(reject);
+                .catch(errorLogging);
               break;
             case 'getCryptoRates':
               getCryptoRates(body)
                 .then(resolve)
-                .catch(reject);
+                .catch(errorLogging);
               break;
             case 'getGasLimits':
               getGasLimits(body)
                 .then(resolve)
-                .catch(reject);
+                .catch(errorLogging);
               break;
             default:
               reject(error('unknown error'));

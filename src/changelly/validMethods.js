@@ -4,6 +4,7 @@ export default [
   "getMinAmount",
   "getExchangeAmount",
   "getFixRate",
+  "getFixRateForAmount",
   "validateAddress",
   "createTransaction",
   "createFixTransaction",

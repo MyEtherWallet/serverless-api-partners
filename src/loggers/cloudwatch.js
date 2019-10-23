@@ -15,6 +15,7 @@ const getLogObject = method => {
     Value: 1
   };
 };
+
 const addToCloudWatch = (metricData, type) => {
   const params = {
     MetricData: metricData,
@@ -55,6 +56,9 @@ class Logger {
     else if (reqBody.method) {
       addToCloudWatch([getLogObject(reqBody.method)], this.type);
     }
+  }
+  errorReporter(partnerName){
+    addToCloudWatch([getLogObject(partnerName)], "PARTNER-API-ERRORS");
   }
 }
 
