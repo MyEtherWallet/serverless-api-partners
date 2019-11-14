@@ -8,7 +8,7 @@ export default body => {
     const req = {
       url: configs.API_URL_ETH + configs.SWAP
     };
-    body.apiKey = configs.TOTLE_API_KEY
+    body.params.apiKey = configs.TOTLE_API_KEY
 
     request(req, body.params)
       .then(result => {
