@@ -2,6 +2,7 @@ import api from "./api";
 import changelly from "./changelly";
 import bity from "./bity";
 import kyber from './kyber'
+import totle from './totle'
 import { cloudWatchLogger } from "./loggers";
 
 api.post("/changelly", request => {
@@ -17,6 +18,11 @@ api.post("/bity", request => {
 api.post("/kyber", request => {
   const cloudwatch = new cloudWatchLogger("KYBER");
   return kyber(request, cloudwatch);
+});
+
+api.post("/totle", request => {
+  const cloudwatch = new cloudWatchLogger("TOTLE");
+  return totle(request, cloudwatch);
 });
 
 api.get("/", () => "MyEtherWallet Partners API");
