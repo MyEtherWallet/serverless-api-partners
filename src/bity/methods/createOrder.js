@@ -99,7 +99,8 @@ const cryptoToFiat = body => {
         const req2 = {
           url: configs.API_V2 + configs.ORDER_DETAIL_URL_V2 + statusId,
           headers: {
-            Authorization: 'Bearer ' + configs.BITY_TOKEN
+            Authorization: 'Bearer ' + configs.BITY_TOKEN,
+            'content-type': 'application/json'
           }
         };
         requestor(req2)

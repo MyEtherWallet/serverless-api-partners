@@ -27,7 +27,7 @@ export default body => {
     const req = {
       url: configs.API_URL + configs.ORDER_PATH + orderid,
       method: "GET",
-      headers: { Authorization: "Bearer " + configs.BITY_TOKEN }
+      headers: { Authorization: "Bearer " + configs.BITY_TOKEN, 'accept': 'application/json' }
     };
     const reqBody = {};
     request(req, reqBody)

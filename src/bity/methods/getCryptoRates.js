@@ -7,7 +7,8 @@ export default body => {
   return new Promise((resolve, reject) => {
     const req = {
       url: configs.API_URL + configs.BITY_SWAP_RATES,
-      method: 'GET'
+      method: 'GET',
+      headers: {'accept': 'application/json'}
     };
     request(req)
       .then(result => {

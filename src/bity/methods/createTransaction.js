@@ -42,7 +42,7 @@ export default body => {
     }
     const req = {
       url: configs.API_URL + configs.ORDER_PATH,
-      headers: { Authorization: "Bearer " + configs.BITY_TOKEN }
+      headers: { Authorization: "Bearer " + configs.BITY_TOKEN, 'content-type': 'application/json' }
     };
     const reqBody = {
       amount: body.params.amount,

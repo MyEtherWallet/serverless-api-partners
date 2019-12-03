@@ -56,7 +56,7 @@ describe('Bity API', () => {
         orderId = result.id;
         expect(result.input.amount).toBe('1');
         expect(result.input.currency).toBe('ETH');
-        expect(result.output.currency).toBe('BTC');
+        expect(result.output.currency).toBe('EUR');
         expect(response.response.id).toBe(83);
         done();
       })
