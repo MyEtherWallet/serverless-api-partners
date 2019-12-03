@@ -23,13 +23,13 @@ export default body => {
     }
     const req = {
       url: configs.API_V2 + configs.ESTIMATE_V2,
-      headers: {Authorization: 'Bearer ' + configs.BITY_TOKEN}
+      headers: {'content-type': 'application/json', 'accept': 'application/json'}
     };
 
     const reqBody = {
       'input': {
         'currency': body.params.fromCurrency,
-        'amount': body.params.fromValue || body.params.amount
+        'amount': `${body.params.fromValue || body.params.amount}`
       },
       'output': {
         'currency': body.params.toCurrency

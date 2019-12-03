@@ -4,6 +4,64 @@ import { consoleLogger } from '../src/loggers';
 const logger = new consoleLogger('BITY');
 describe('Bity API', () => {
   let orderId = null;
+  test('get estimate from Bity', async done => {
+    expect.assertions(4);
+    bity(
+      {
+        body: {
+          jsonrpc: '2.0',
+          method: 'getEstimate',
+          params: {
+            fromCurrency: 'ETH',
+            toCurrency: 'BTC',
+            pair: 'ETHBTC',
+            fromValue: 0.5
+          },
+          id: 83
+        }
+      },
+      logger
+    )
+      .then(response => {
+        const result = response.response.result;
+        orderId = result.id;
+        expect(result.input.amount).toBe("0.5");
+        expect(result.input.currency).toBe('ETH');
+        expect(result.output.currency).toBe('BTC');
+        expect(response.response.id).toBe(83);
+        done();
+      })
+      .catch(console.log);
+  });
+  test('get estimate from Bity2', async done => {
+    expect.assertions(4);
+    bity(
+      {
+        body: {
+          jsonrpc: '2.0',
+          method: 'getEstimate',
+          params: {
+            fromCurrency: 'ETH',
+            toCurrency: 'EUR',
+            pair: 'ETHEUR',
+            fromValue: 1
+          },
+          id: 83
+        }
+      },
+      logger
+    )
+      .then(response => {
+        const result = response.response.result;
+        orderId = result.id;
+        expect(result.input.amount).toBe('1');
+        expect(result.input.currency).toBe('ETH');
+        expect(result.output.currency).toBe('BTC');
+        expect(response.response.id).toBe(83);
+        done();
+      })
+      .catch(console.log);
+  });
   test('Create new order from bity', async done => {
     expect.assertions(5);
     bity(
