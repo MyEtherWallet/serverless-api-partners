@@ -14,7 +14,7 @@ describe('Proxy API', () => {
       logger
     )
       .then(response => {
-        const result = JSON.parse(response.response);
+        const result = response.response
         expect(response).toEqual(expect.anything());
         expect(result.item).toEqual(expect.anything());
         expect(result.item.sites).toEqual(expect.anything());
@@ -35,7 +35,7 @@ describe('Proxy API', () => {
     )
       .then(response => {
         expect(response).toEqual(expect.anything());
-        const result = JSON.parse(response.response);
+        const result = response.response
         expect(result.items).toEqual(expect.anything());
         done();
       })

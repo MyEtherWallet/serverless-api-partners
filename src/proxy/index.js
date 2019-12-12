@@ -16,7 +16,8 @@ export default (req, logger) => {
     };
     request(reqGet)
       .then(result => {
-        resolve(success(result));
+        const parsed = JSON.parse(result);
+        resolve(success(parsed));
       })
       .catch(err => {
         console.log(err);
