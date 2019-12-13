@@ -9,6 +9,7 @@ import {
 export default (req, logger) => {
   return new Promise((resolve, reject) => {
     const errorLogging = error => {
+      if(logger) console.log('KYBER ERROR', error);
       if(logger) logger.errorReporter('kyber');
       reject(error)
     };
