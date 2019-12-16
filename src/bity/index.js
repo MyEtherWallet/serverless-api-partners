@@ -18,6 +18,7 @@ import {
 export default (req, logger) => {
   return new Promise((resolve, reject) => {
     const errorLogging = error => {
+      if(logger) console.log('BITY ERROR', error);
       if(logger) logger.errorReporter('bity');
       reject(error)
     };
