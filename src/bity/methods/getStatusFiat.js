@@ -25,11 +25,11 @@ const formatResponse = response => {
 export default body => {
   return new Promise((resolve, reject) => {
     const orderid = encryptor.decrypt(body.params.orderId);
-    const phoneToken = encryptor.decrypt(body.params.phoneToken);
+    const token = encryptor.decrypt(body.params.token);
     const req = {
       url: configs.API_URL + configs.ORDER_DETAIL_URL + orderid,
       method: "GET",
-      headers: {'X-Phone-Token': phoneToken, Authorization: "Bearer " + configs.BITY_TOKEN }
+      headers: {Authorization: "Bearer " + token }
     };
     const reqBody = {};
     request(req, reqBody)

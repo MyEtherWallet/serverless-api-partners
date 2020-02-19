@@ -44,19 +44,25 @@ const requestor = (req) => {
 export default body => {
   return new Promise((resolve, reject) => {
     let statusId;
+    let accessToken = null;
+    let urlPath = null;
     if(body.params.detailsUrl.includes('-')){
       statusId = body.params.detailsUrl;
     } else {
       statusId = encryptor.decrypt(body.params.detailsUrl);
     }
+    if(body.params.token){
+      accessToken = encryptor.decrypt(body.params.token);
+    } else {
+      accessToken = configs.BITY_TOKEN;
+    }
     const req = {
       url: configs.API_V2 + configs.ORDER_DETAIL_URL_V2 + statusId,
       headers: {
-        Authorization: 'Bearer ' + configs.BITY_TOKEN,
+        Authorization: 'Bearer ' + accessToken,
         'content-type': 'application/json'
       }
     };
-
     requestor(req)
       .then(result => {
         resolve(
