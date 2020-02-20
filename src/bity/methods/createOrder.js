@@ -6,11 +6,9 @@ import request from 'request';
 const encryptor = new SimpleEncryptor(configs.encryptionKey);
 
 const formatResponse = order => {
-  console.log(order.statusCode); // todo remove dev item
-  console.log(order.headers); // todo remove dev item
   const statusId = order.headers['location'].replace('/api/v2/orders/', '').replace('/v2/orders/', '');
   return {
-    id: encryptor.encrypt(statusId),
+    id: statusId,
     created: order.statusCode === 201
   };
 };
@@ -22,7 +20,7 @@ const formatFiatResponse = (order, statusId, token) => {
     requiresSigning: false,
     id: encryptor.encrypt(statusId),
     reference: encryptor.encrypt(statusId),
-    token: token ? encryptor.encrypt(token) : '',
+    token: token ? encryptor.encrypt(token) : 0,
     amount: orderJson.output.amount,
     payment_address: orderJson.payment_details.crypto_address,
     payment_amount: orderJson.input.amount,
@@ -142,7 +140,7 @@ const cryptoToFiat = body => {
             if (!createDetails.created) {
               return createDetails;
             }
-            const statusId = encryptor.decrypt(createDetails.id);
+            const statusId = createDetails.id;
             const req2 = {
               url: configs.API_V2 + configs.ORDER_DETAIL_URL_V2 + statusId,
               headers: {
@@ -150,6 +148,7 @@ const cryptoToFiat = body => {
                 'content-type': 'application/json'
               }
             };
+
             requestor(req2)
               .then(result => {
                 resolve(
@@ -165,9 +164,12 @@ const cryptoToFiat = body => {
               });
           })
           .catch(err => {
-            reject(error(err, ''));
+            reject(error(err, '2'));
           });
-      });
+      })
+      .catch(err => {
+      reject(error(err, '1'));
+    });;
 
   });
 };

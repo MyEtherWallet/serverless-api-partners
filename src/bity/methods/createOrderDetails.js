@@ -5,10 +5,11 @@ import {error, success} from '../../response';
 import SimpleEncryptor from 'simple-encryptor';
 
 const encryptor = new SimpleEncryptor(configs.encryptionKey);
-const formatResponse = (order, statusId) => {
+const formatResponse = (order, statusId, token) => {
   const orderJson = JSON.parse(order);
   return {
-    id: encryptor.encrypt(statusId),
+    id: statusId,
+    token: token,
     amount: orderJson.output.amount,
     payment_address: orderJson.payment_details.crypto_address,
     payment_amount: orderJson.input.amount,
@@ -45,7 +46,6 @@ export default body => {
   return new Promise((resolve, reject) => {
     let statusId;
     let accessToken = null;
-    let urlPath = null;
     if(body.params.detailsUrl.includes('-')){
       statusId = body.params.detailsUrl;
     } else {
@@ -68,7 +68,7 @@ export default body => {
         resolve(
           success({
             jsonrpc: '2.0',
-            result: formatResponse(result, body.params.detailsUrl),
+            result: formatResponse(result, body.params.detailsUrl, body.params.token),
             id: body.id
           })
         );
