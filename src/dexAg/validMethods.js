@@ -1,1 +1,4 @@
-export default ['getSupportedTokens', 'getCryptoRates', 'getGasLimits'];
+export default ['getPriceAndOrderDetails',
+  'getPrice',
+  'generateTransaction',
+  'getAvailableTokens'];

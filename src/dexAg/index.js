@@ -1,9 +1,10 @@
 import { error } from '../response';
 import allowedMethods from './validMethods';
 import {
-  getSupportedTokens,
-  getCryptoRates,
-  getGasLimits
+  getPriceAndOrderDetails,
+  getPrice,
+  generateTransaction,
+  getAvailableTokens
 } from './methods';
 
 export default (req, logger) => {
@@ -23,18 +24,23 @@ export default (req, logger) => {
           reject(error(`Invalid Method - ${body.method}`));
         else {
           switch (body.method) {
-            case 'getSupportedTokens':
-              getSupportedTokens(body)
+            case 'getPriceAndOrderDetails':
+              getPriceAndOrderDetails(body)
                 .then(resolve)
                 .catch(errorLogging);
               break;
-            case 'getCryptoRates':
-              getCryptoRates(body)
+            case 'getPrice':
+              getPrice(body)
                 .then(resolve)
                 .catch(errorLogging);
               break;
-            case 'getGasLimits':
-              getGasLimits(body)
+            case 'generateTransaction':
+              generateTransaction(body)
+                .then(resolve)
+                .catch(errorLogging);
+              break;
+            case 'getAvailableTokens':
+              getAvailableTokens(body)
                 .then(resolve)
                 .catch(errorLogging);
               break;

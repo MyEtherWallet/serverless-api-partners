@@ -1,9 +1,11 @@
-import getSupportedTokens from './getSupportedTokens'
-import getCryptoRates from './getCryptoRates'
-import getGasLimits from './getGasLimits'
+import getPriceAndOrderDetails from './getPriceAndOrderDetails'
+import getPrice from './getPrice'
+import generateTransaction from './generateTransaction'
+import getAvailableTokens from './getAvailableTokens'
 
 export {
-  getSupportedTokens,
-  getCryptoRates,
-  getGasLimits
+  getPriceAndOrderDetails,
+  getPrice,
+  generateTransaction,
+  getAvailableTokens
 };

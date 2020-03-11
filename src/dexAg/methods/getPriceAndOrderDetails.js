@@ -5,14 +5,9 @@ import { error, success } from '../../response';
 
 export default body => {
   return new Promise((resolve, reject) => {
-    let API_URL;
-    if(body.params.includes('ROP')){
-      API_URL = configs.API_URL_ROP
-    } else {
-      API_URL = configs.API_URL_ETH
-    }
+    const API_URL = configs.BASE_URL;
     const req = {
-      url: API_URL + configs.SUPPORTED,
+      url: API_URL + configs.TRADE,
       method: 'GET'
     };
     request(req)
