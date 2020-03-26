@@ -10,6 +10,24 @@ export default body => {
     const pairOptions = [...Object.keys(configs.orderValues), ...Object.keys(configs.fiatValues)];
     let notSupported = true;
 
+    if(configs.disabledPairs.includes(body.params.pair)){
+     return resolve(
+        success({
+          jsonrpc: '2.0',
+          result: {
+            input:{
+              amount: 1,
+              minimum_amount: 0
+            },
+            output: {
+              amount: 0
+            }
+          },
+          id: body.id
+        })
+      );
+    }
+
     if(pairOptions.includes(body.params.pair)){
       if(configs.orderValues[body.params.pair]){
         notSupported = !configs.orderValues[body.params.pair].active

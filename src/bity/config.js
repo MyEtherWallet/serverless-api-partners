@@ -76,5 +76,8 @@ export default {
       active: true
     }
   },
-  encryptionKey: process.env.BITY_ENC_KEY || ""
+  encryptionKey: process.env.BITY_ENC_KEY || "",
+  disabledPairs: [
+    'BTCREP', 'ETHREP', 'ETHBTC', 'BTCETH', 'REPETH', 'REPBTC'
+  ]
 };
