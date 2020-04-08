@@ -1,8 +1,15 @@
 import configs from "../config";
 import request from "../../request";
 import { error, success } from "../../response";
+import wrappedRequest from "../wrappedRequest";
 import SimpleEncryptor from "simple-encryptor";
 const encryptor = new SimpleEncryptor(configs.encryptionKey);
+
+
+/**
+ *
+Crypto to Crypto
+ */
 const formatResponse = order => {
   return {
     id: encryptor.encrypt(
@@ -32,6 +39,7 @@ const formatResponse = order => {
     }
   };
 };
+
 export default body => {
   return new Promise((resolve, reject) => {
     if (
@@ -40,10 +48,10 @@ export default body => {
     ) {
       return reject(error("Not supported", body.id));
     }
-    const req = {
-      url: configs.API_URL + configs.ORDER_PATH,
-      headers: { Authorization: "Bearer " + configs.BITY_TOKEN, 'content-type': 'application/json' }
-    };
+    // const req = {
+    //   url: configs.API_URL + configs.ORDER_PATH,
+    //   headers: { Authorization: "Bearer " + configs.BITY_TOKEN, 'content-type': 'application/json' }
+    // };
     const reqBody = {
       amount: body.params.amount,
       pair: body.params.pair,
@@ -54,8 +62,8 @@ export default body => {
       payment_method: configs.orderValues[body.params.pair].payment_method,
       crypto_address: body.params.destAddress
     };
-
-    request(req, reqBody)
+    wrappedRequest(configs.API_URL + configs.ORDER_PATH, reqBody)
+    // request(req, reqBody)
       .then(result => {
         resolve(
           success({
