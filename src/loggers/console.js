@@ -51,6 +51,9 @@ class Logger {
       addToConsole([getLogObject(reqBody.method)], this.type);
     }
   }
+  errorReporter(partnerName){
+    addToConsole([getLogObject(partnerName)], "PARTNER_API_ERRORS");
+  }
 }
 
 export default Logger;

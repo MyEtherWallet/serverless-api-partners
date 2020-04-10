@@ -36,6 +36,7 @@
     "aws-sdk": "^2.362.0",
     "claudia-api-builder": "^4.1.1",
     "dotenv": "^6.1.0",
+    "openid-client": "^3.12.2",
     "request": "^2.88.0",
     "simple-encryptor": "^2.0.0"
   }

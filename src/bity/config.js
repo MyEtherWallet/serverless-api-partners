@@ -1,6 +1,8 @@
 require("dotenv").config();
 export default {
   BITY_TOKEN: process.env.BITY_TOKEN || "",
+  BITY_OAUTH_CLIENT_ID: process.env.BITY_OAUTH_CLIENT_ID || "",
+  BITY_OAUTH_CLIENT_SECRET: process.env.BITY_OAUTH_CLIENT_SECRET || "",
   EXIT_TO_FIAT_API_URL: 'https://bity.com',
   BITY_SWAP_RATES: '/api/v1/rate2',
   BITY_EXIT_RATES: '/api/v2/pairs?input_tags=crypto&output_tags=fiat&prices=1',
@@ -74,5 +76,8 @@ export default {
       active: true
     }
   },
-  encryptionKey: process.env.BITY_ENC_KEY || ""
+  encryptionKey: process.env.BITY_ENC_KEY || "",
+  disabledPairs: [
+    'BTCREP', 'ETHREP', 'ETHBTC', 'BTCETH', 'REPETH', 'REPBTC'
+  ]
 };

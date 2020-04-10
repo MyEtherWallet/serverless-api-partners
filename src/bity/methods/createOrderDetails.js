@@ -5,10 +5,11 @@ import {error, success} from '../../response';
 import SimpleEncryptor from 'simple-encryptor';
 
 const encryptor = new SimpleEncryptor(configs.encryptionKey);
-const formatResponse = (order, statusId) => {
+const formatResponse = (order, statusId, token) => {
   const orderJson = JSON.parse(order);
   return {
-    id: encryptor.encrypt(statusId),
+    id: statusId,
+    token: token,
     amount: orderJson.output.amount,
     payment_address: orderJson.payment_details.crypto_address,
     payment_amount: orderJson.input.amount,
@@ -44,25 +45,30 @@ const requestor = (req) => {
 export default body => {
   return new Promise((resolve, reject) => {
     let statusId;
+    let accessToken = null;
     if(body.params.detailsUrl.includes('-')){
       statusId = body.params.detailsUrl;
     } else {
       statusId = encryptor.decrypt(body.params.detailsUrl);
     }
+    if(body.params.token){
+      accessToken = encryptor.decrypt(body.params.token);
+    } else {
+      accessToken = configs.BITY_TOKEN;
+    }
     const req = {
       url: configs.API_V2 + configs.ORDER_DETAIL_URL_V2 + statusId,
       headers: {
-        Authorization: 'Bearer ' + configs.BITY_TOKEN,
+        Authorization: 'Bearer ' + accessToken,
         'content-type': 'application/json'
       }
     };
-
     requestor(req)
       .then(result => {
         resolve(
           success({
             jsonrpc: '2.0',
-            result: formatResponse(result, body.params.detailsUrl),
+            result: formatResponse(result, body.params.detailsUrl, body.params.token),
             id: body.id
           })
         );
