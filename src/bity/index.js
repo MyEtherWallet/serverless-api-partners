@@ -4,15 +4,13 @@ import {
   getEstimate,
   createTransaction,
   getStatus,
-  loginWithPhone,
-  sendReceivedSmsCode,
   createPhoneTransaction,
   getExitOrderDetails,
   getStatusFiat,
   getFiatRates,
   getCryptoRates,
-  createOrder,
-  createOrderDetails
+  createFiatOrder,
+  createFiatOrderDetails
 } from './methods';
 
 export default (req, logger) => {
@@ -33,6 +31,7 @@ export default (req, logger) => {
         else {
           switch (body.method) {
             case 'createTransaction':
+              // v1
               createTransaction(body)
                 .then(resolve)
                 .catch(errorLogging);
@@ -42,22 +41,13 @@ export default (req, logger) => {
                 .then(resolve)
                 .catch(errorLogging);
               break;
-            case 'logInWithPhoneNumber':
-              loginWithPhone(body)
-                .then(resolve)
-                .catch(errorLogging);
-              break;
-            case 'sendReceivedSmsCode':
-              sendReceivedSmsCode(body)
-                .then(resolve)
-                .catch(errorLogging);
-              break;
             case 'createExitToFiatTransaction':
               createPhoneTransaction(body)
                 .then(resolve)
                 .catch(errorLogging);
               break;
             case 'getExitOrderDetails':
+              // is this still used
               getExitOrderDetails(body)
                 .then(resolve)
                 .catch(errorLogging);
@@ -73,12 +63,14 @@ export default (req, logger) => {
                 .catch(errorLogging);
               break;
             case 'createOrder':
-              createOrder(body)
+              // to fiat
+              createFiatOrder(body)
                 .then(resolve)
                 .catch(errorLogging);
               break;
             case 'getOrderDetails':
-              createOrderDetails(body)
+              // fiat
+              createFiatOrderDetails(body)
                 .then(resolve)
                 .catch(errorLogging);
               break;
