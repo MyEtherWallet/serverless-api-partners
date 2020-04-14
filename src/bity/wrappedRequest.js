@@ -1,27 +1,34 @@
 import configs from './config';
 import request from 'request';
 
-const wrappedRequest = (url, data, method = "POST") => {
+const wrappedRequest = (url, data = {}, returnToken) => {
 
-return getToken()
-  .then(token => {
-    const options = {
-      url: url,
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + token
-      },
-      method: "POST",
-      body: JSON.stringify(data)
-    };
-    return new Promise((resolve, reject) => {
-      request(options, (error, response, body) => {
-        if (error) reject(error);
-        else resolve(response);
+  return getToken()
+    .then(token => {
+      const options = {
+        url: url,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + token
+        },
+        method: 'POST',
+        body: JSON.stringify(data)
+      };
+
+      // https://exchange.api.bity.com/v2/orders/{order_uuid}/signature
+      return new Promise((resolve, reject) => {
+        request(options, (error, response, body) => {
+          if (error) reject(error);
+          else {
+            if (returnToken) {
+              resolve({result: response, token: token});
+            } else {
+              resolve(response);
+            }
+          }
+        });
       });
     });
-  })
-
 };
 
 const getToken = () => {
