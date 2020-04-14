@@ -8,6 +8,7 @@ import getFiatRates from './getFiatRates'
 import getCryptoRates from './getCryptoRates'
 import createFiatOrder from './createFiatOrder'
 import createFiatOrderDetails from './createFiatOrderDetails'
+import sendSignedMessage from './sendSignedMessage'
 
 export {
   getEstimate,
@@ -19,5 +20,6 @@ export {
   getFiatRates,
   getCryptoRates,
   createFiatOrder,
-  createFiatOrderDetails
+  createFiatOrderDetails,
+  sendSignedMessage
 };

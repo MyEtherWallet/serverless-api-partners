@@ -25,8 +25,9 @@ export default body => {
     // ) {
     //   return reject(error("Not supported", body.id));
     // }
-
-    wrappedRequest(configs.API_V2 + body.signature_submission_url, {body: body.signature})
+    const params = body.params;
+    console.log(body); // todo remove dev item
+    wrappedRequest(configs.API_V2 + params.signature_submission_url, {body: params.signature})
       .then(result => {
         resolve(
           success({
@@ -37,6 +38,7 @@ export default body => {
         );
       })
       .catch(err => {
+        console.log(err); // todo remove dev item
         reject(error(err, ''));
       });
   });
