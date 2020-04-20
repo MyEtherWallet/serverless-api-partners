@@ -1,11 +1,9 @@
-import getPriceAndOrderDetails from './getPriceAndOrderDetails'
-import getPrice from './getPrice'
-import generateTransaction from './generateTransaction'
-import getAvailableTokens from './getAvailableTokens'
+import createTransaction from './createTransaction';
+import getPrice from './getPrice';
+import getSupportedCurrencies from './getSupportedCurrencies'
 
 export {
-  getPriceAndOrderDetails,
+  createTransaction,
   getPrice,
-  generateTransaction,
-  getAvailableTokens
-};
+  getSupportedCurrencies
+}

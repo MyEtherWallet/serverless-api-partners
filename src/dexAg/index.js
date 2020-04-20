@@ -1,51 +1,48 @@
-import { error } from '../response';
+import {error, success} from '../response';
+import changellyConfigs from './config';
 import allowedMethods from './validMethods';
+import request from '../request';
+import crypto from 'crypto';
 import {
-  getPriceAndOrderDetails,
+  createTransaction,
   getPrice,
-  generateTransaction,
-  getAvailableTokens
+  getSupportedCurrencies
 } from './methods';
 
 export default (req, logger) => {
   return new Promise((resolve, reject) => {
+
     const errorLogging = error => {
-      if(logger) console.log('DEXAG ERROR', error);
-      if(logger) logger.errorReporter('dexAg');
-      reject(error)
+      if (logger) console.log('DEX_AG ERROR', error);
+      if (logger) logger.errorReporter('dexAg');
+      reject(error);
     };
+
     if (req.body) {
       let body = req.body;
       if (logger) logger.process(body);
       if (Array.isArray(body)) {
         reject(error(`Invalid Request - ${body}`));
       } else {
-        if (allowedMethods.indexOf(body.method) == -1)
+        if (allowedMethods.indexOf(body.method) === -1)
           reject(error(`Invalid Method - ${body.method}`));
         else {
           switch (body.method) {
-            case 'getPriceAndOrderDetails':
-              getPriceAndOrderDetails(body)
-                .then(resolve)
-                .catch(errorLogging);
-              break;
             case 'getPrice':
               getPrice(body)
                 .then(resolve)
                 .catch(errorLogging);
               break;
-            case 'generateTransaction':
-              generateTransaction(body)
+            case 'createTransaction':
+              createTransaction(body)
                 .then(resolve)
                 .catch(errorLogging);
               break;
-            case 'getAvailableTokens':
-              getAvailableTokens(body)
+            case 'getSupportedCurrencies':
+              getSupportedCurrencies(body)
                 .then(resolve)
                 .catch(errorLogging);
               break;
-            default:
-              reject(error('unknown error'));
           }
         }
       }

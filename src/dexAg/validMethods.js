@@ -1,4 +1,5 @@
-export default ['getPriceAndOrderDetails',
+export default [
   'getPrice',
-  'generateTransaction',
-  'getAvailableTokens'];
+  'getSupportedCurrencies',
+  'createTransaction'
+];
