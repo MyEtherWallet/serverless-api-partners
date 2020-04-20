@@ -27,15 +27,54 @@ export default body => {
     // }
     const params = body.params;
     console.log(body); // todo remove dev item
-    wrappedRequest(configs.API_V2 + params.signature_submission_url, {body: params.signature})
+    const options = {
+      url: configs.API_V2 + params.signature_submission_url,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + params.token
+      },
+      method: 'POST',
+      body: JSON.stringify({body: params.signature})
+    };
+
+    // https://exchange.api.bity.com/v2/orders/{order_uuid}/signature
+//     return new Promise((resolve, reject) => {
+// ;
+//     })
+    wrappedRequest(configs.API_V2 + params.signature_submission_url, {body: params.signature}, true)
+    // request(options)
       .then(result => {
-        resolve(
-          success({
-            jsonrpc: '2.0',
-            result: formatResponse(result),
-            id: body.id
-          })
-        );
+        console.log(result); // todo remove dev item
+        const options = {
+          url: configs.API_V2 + `/v2/orders/${params.statusId}`,
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + result.token
+          },
+          method: 'GET'
+        };
+        request(options)
+          .then(rawRes => {
+            const res = JSON.parse(rawRes)
+            console.log(res);
+            resolve({
+              id: params.statusId,
+              input: res.input,
+              output: res.output,
+              payment_details: res.payment_details,
+              legacy_status: res.legacy_status,
+              timestamp_created: res.timestamp_created,
+              validFor: 600,
+            });
+          });
+
+        // resolve(
+        //   success({
+        //     jsonrpc: '2.0',
+        //     result: formatResponse(result),
+        //     id: body.id
+        //   })
+        // );
       })
       .catch(err => {
         console.log(err); // todo remove dev item

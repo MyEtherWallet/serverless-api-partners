@@ -1,6 +1,5 @@
 require("dotenv").config();
 export default {
-  CHANGELLY_SECRET: process.env.CHANGELLY_SECRET || "",
-  CHANGELLY_API_KEY: process.env.CHANGELLY_API_KEY || "",
-  API_URL: "https://api.changelly.com/"
+  PROXY_CONTRACT_ADDRESS: process.env.DEX_AG_PROXY_CONTRACT_ADDRESS || "",
+  API_URL: "https://api-v2.dex.ag/"
 };

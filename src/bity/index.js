@@ -11,7 +11,8 @@ import {
   getCryptoRates,
   createFiatOrder,
   createFiatOrderDetails,
-  sendSignedMessage
+  sendSignedMessage,
+  getCryptoOderDetails
 } from './methods';
 
 export default (req, logger) => {
@@ -34,6 +35,12 @@ export default (req, logger) => {
             case 'createTransaction':
               // v1
               createTransaction(body)
+                .then(resolve)
+                .catch(errorLogging);
+              break;
+            case 'getCryptoOrderDetails':
+              // fiat
+              getCryptoOderDetails(body)
                 .then(resolve)
                 .catch(errorLogging);
               break;

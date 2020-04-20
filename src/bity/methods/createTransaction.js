@@ -13,6 +13,7 @@ const encryptor = new SimpleEncryptor(configs.encryptionKey);
  */
 const formatResponse = (response, reqBody) => {
   return new Promise((resolve, reject) => {
+    console.log(response.result.headers); // todo remove dev item
     // console.log(response.toJSON()); // todo remove dev item
     const statusId = response.result.headers['location'].replace('/api/v2/orders/', '').replace('/v2/orders/', '');
 
@@ -24,6 +25,8 @@ const formatResponse = (response, reqBody) => {
       },
       method: 'GET'
     };
+    console.log("==========================="); // todo remove dev item
+    console.log(options); // todo remove dev item
     request(options)
       .then(rawRes => {
         const res = JSON.parse(rawRes)
@@ -32,9 +35,12 @@ const formatResponse = (response, reqBody) => {
           id: statusId,
           input: res.input,
           output: res.output,
+          payment_details: res.payment_details,
+          legacy_status: res.legacy_status,
           timestamp_created: res.timestamp_created,
           messageToSign: res.message_to_sign,
           validFor: 600,
+          token: response.token
         });
       });
   });
@@ -48,13 +54,13 @@ export default body => {
     // ) {
     //   return reject(error("Not supported", body.id));
     // }
-
+    console.log(body); // todo remove dev item
     const reqBody = {
       input: {
         amount: body.params.input.amount,
         currency: body.params.input.currency,
         type: 'crypto_address',
-        crypto_address: body.params.input.crypto_address
+        // crypto_address: body.params.input.crypto_address
       },
       output: {
         currency: body.params.output.currency,

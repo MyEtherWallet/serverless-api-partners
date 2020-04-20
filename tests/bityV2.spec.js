@@ -15,14 +15,14 @@ describe('Bity API', () => {
           params: {
             "input": {
               "amount": "0.1",
-              "crypto_address": "1DECAF2uSpFTP4L1fAHR8GCLrPqdwdLse9",
+              // "crypto_address": "1DECAF2uSpFTP4L1fAHR8GCLrPqdwdLse9",
               "currency": "BTC",
-              "type": "crypto_address"
+              // "type": "crypto_address"
             },
             "output": {
               "crypto_address": "0x7676E10eefc7311970A12387518442136ea14D81",
               "currency": "ETH",
-              "type": "crypto_address"
+              // "type": "crypto_address"
             },
           },
           id: 83
