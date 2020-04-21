@@ -6,7 +6,8 @@ import crypto from 'crypto';
 import {
   createTransaction,
   getPrice,
-  getSupportedCurrencies
+  getSupportedCurrencies,
+  supportedDexes
 } from './methods';
 
 export default (req, logger) => {
@@ -43,6 +44,12 @@ export default (req, logger) => {
                 .then(resolve)
                 .catch(errorLogging);
               break;
+            case 'supportedDexes':
+              supportedDexes(body)
+                .then(resolve)
+                .catch(errorLogging);
+              break;
+
           }
         }
       }
