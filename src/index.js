@@ -22,7 +22,7 @@ api.post("/kyber", request => {
 });
 
 api.post("/dexag", request => {
-  const cloudwatch = new cloudWatchLogger("DEX_AG");
+  const cloudwatch = new cloudWatchLogger("DEXAG");
   return dexAg(request, cloudwatch);
 });
 
