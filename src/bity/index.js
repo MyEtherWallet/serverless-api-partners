@@ -2,6 +2,7 @@ import { error } from '../response';
 import allowedMethods from './validMethods';
 import {
   getEstimate,
+  createTransactionV2,
   createTransaction,
   getStatus,
   createPhoneTransaction,
@@ -11,8 +12,8 @@ import {
   getCryptoRates,
   createFiatOrder,
   createFiatOrderDetails,
-  sendSignedMessage,
-  getCryptoOderDetails
+  sendSignedMessageV2,
+  getCryptoOrderDetailsV2
 } from './methods';
 
 export default (req, logger) => {
@@ -38,14 +39,20 @@ export default (req, logger) => {
                 .then(resolve)
                 .catch(errorLogging);
               break;
-            case 'getCryptoOrderDetails':
-              // fiat
-              getCryptoOderDetails(body)
+            case 'createTransactionV2':
+              // v1
+              createTransactionV2(body)
                 .then(resolve)
                 .catch(errorLogging);
               break;
-            case 'sendSignedMessage':
-              sendSignedMessage(body)
+            case 'getCryptoOrderDetailsV2':
+              // fiat
+              getCryptoOrderDetailsV2(body)
+                .then(resolve)
+                .catch(errorLogging);
+              break;
+            case 'sendSignedMessageV2':
+              sendSignedMessageV2(body)
                 .then(resolve)
                 .catch(errorLogging);
               break;

@@ -1,29 +1,28 @@
 import bity from '../src/bity';
 import { consoleLogger } from '../src/loggers';
+import Web3 from 'web3'
 
 // add a web3 instance here to sign the message in the test env.
+
+const web3 = new Web3('https://mainnet.infura.io/v3/c9b249497d074ab59c47a97bdfe6b401');
+
+
+const wallet = web3.eth.accounts.wallet.add('9b11121e377bfde0375bfc1d6726f156bdceec1ca2e2e6b4ce877777f3a2c1be');
 const logger = new consoleLogger('BITY');
+let signature = '';
+let submitUrl = '';
 describe('Bity API', () => {
   let orderId = null;
-  test('Create new order from bity', async done => {
+  test('submit sig to bity', async done => {
     expect.assertions(0);
     bity(
       {
         body: {
           jsonrpc: '2.0',
-          method: 'createTransaction',
+          method: 'sendSignedMessageV2',
           params: {
-            "input": {
-              "amount": "0.1",
-              // "crypto_address": "1DECAF2uSpFTP4L1fAHR8GCLrPqdwdLse9",
-              "currency": "BTC",
-              // "type": "crypto_address"
-            },
-            "output": {
-              "crypto_address": "0x7676E10eefc7311970A12387518442136ea14D81",
-              "currency": "ETH",
-              // "type": "crypto_address"
-            },
+            signature: '0x5ff250e1a7712eae9950b4630e471d68929261ead39481cb718bc9eeb460ca9e591f4d5fba0ad6c955f301bf7a91b8d6c4f3c0c0d5532055ac74e9ede632beed00',
+            signature_submission_url: '/v2/orders/651c4003-e77d-464a-9876-9f8c7a509b75/signature'
           },
           id: 83
         }
@@ -32,6 +31,7 @@ describe('Bity API', () => {
     )
       .then(response => {
         const result = response.response.result;
+        console.log("=================="); // todo remove dev item
         console.log(result); // todo remove dev item
         orderId = result.id;
         // expect(result.amount).toBe(0.5);
@@ -43,34 +43,5 @@ describe('Bity API', () => {
       })
       .catch(console.log);
   });
-  // test('Create new order from bity', async done => {
-  //   expect.assertions(0);
-  //   bity(
-  //     {
-  //       body: {
-  //         jsonrpc: '2.0',
-  //         method: 'sendSignedMessage',
-  //         params: {
-  //           signature: '0x7ed6fae3967e3b52a308f993137b2ea6d39621eacb48272dc8769e457772a50d4d4819495835de5103e4cb03cb28964518469750540b562855c125fe17375ea501',
-  //           signature_submission_url: '/v2/orders/ceab09e2-b59e-41e5-a076-79a891a15d67/signature'
-  //         },
-  //         id: 83
-  //       }
-  //     },
-  //     logger
-  //   )
-  //     .then(response => {
-  //       const result = response.response.result;
-  //       console.log(result); // todo remove dev item
-  //       orderId = result.id;
-  //       // expect(result.amount).toBe(0.5);
-  //       // expect(result).toBe(expect.anything());
-  //       // expect(result.input.currency).toBe('ETH');
-  //       // expect(result.output.currency).toBe('BTC');
-  //       // expect(response.response.id).toBe(83);
-  //       done();
-  //     })
-  //     .catch(console.log);
-  // });
 
 });

@@ -40,5 +40,8 @@
     "openid-client": "^3.12.2",
     "request": "^2.88.0",
     "simple-encryptor": "^2.0.0"
+  },
+  "optionalDependencies": {
+    "web3": "^1.2.6"
   }
 }

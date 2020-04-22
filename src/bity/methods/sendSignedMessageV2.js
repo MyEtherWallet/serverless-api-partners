@@ -1,8 +1,10 @@
 import configs from '../config';
+import requestPromise from '../../request';
 import request from '../../request';
 import {error, success} from '../../response';
 import wrappedRequest from '../wrappedRequest';
 import SimpleEncryptor from 'simple-encryptor';
+import getToken from '../getToken';
 
 const encryptor = new SimpleEncryptor(configs.encryptionKey);
 
@@ -36,24 +38,47 @@ export default body => {
       method: 'POST',
       body: JSON.stringify({body: params.signature})
     };
-
     // https://exchange.api.bity.com/v2/orders/{order_uuid}/signature
 //     return new Promise((resolve, reject) => {
 // ;
 //     })
-    wrappedRequest(configs.API_V2 + params.signature_submission_url, {body: params.signature}, true)
+//     wrappedRequest(configs.API_V2 + params.signature_submission_url, {body: params.signature}, true)
     // request(options)
+    let token;
+    getToken()
+      .then(tokenRecv => {
+        token = tokenRecv;
+
+        const options = {
+          url: configs.API_V2 + params.signature_submission_url,
+          headers: {
+            'Content-Type': 'application/json',
+            // 'Authorization': 'Bearer ' + tokenRecv //params.token
+          },
+          method: 'POST',
+          json:  {body: params.signature}
+        };
+
+        return new Promise((resolve, reject) => {
+          request(options, (error, response, body) => {
+            if (error) reject(error);
+            else {
+              resolve({result: response, token: token});
+            }
+          });
+        });
+      })
       .then(result => {
         console.log(result); // todo remove dev item
         const options = {
           url: configs.API_V2 + `/v2/orders/${params.statusId}`,
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + result.token
+            'Authorization': 'Bearer ' + params.token
           },
           method: 'GET'
         };
-        request(options)
+        requestPromise(options)
           .then(rawRes => {
             const res = JSON.parse(rawRes)
             console.log(res);
