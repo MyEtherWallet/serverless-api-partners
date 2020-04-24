@@ -2,17 +2,19 @@ import { error } from '../response';
 import allowedMethods from './validMethods';
 import {
   getEstimate,
+  createTransactionV2,
   createTransaction,
   getStatus,
-  loginWithPhone,
-  sendReceivedSmsCode,
   createPhoneTransaction,
   getExitOrderDetails,
   getStatusFiat,
   getFiatRates,
   getCryptoRates,
-  createOrder,
-  createOrderDetails
+  createFiatOrder,
+  createFiatOrderDetails,
+  sendSignedMessageV2,
+  getCryptoOrderDetailsV2,
+  getStatusV2
 } from './methods';
 
 export default (req, logger) => {
@@ -33,22 +35,35 @@ export default (req, logger) => {
         else {
           switch (body.method) {
             case 'createTransaction':
+              // v1
               createTransaction(body)
+                .then(resolve)
+                .catch(errorLogging);
+              break;
+            case 'createTransactionV2':
+              // v1
+              createTransactionV2(body)
+                .then(resolve)
+                .catch(errorLogging);
+              break;
+            case 'getCryptoOrderDetailsV2':
+              // fiat
+              getCryptoOrderDetailsV2(body)
+                .then(resolve)
+                .catch(errorLogging);
+              break;
+            case 'sendSignedMessageV2':
+              sendSignedMessageV2(body)
+                .then(resolve)
+                .catch(errorLogging);
+              break;
+            case 'getStatusV2':
+              getStatusV2(body)
                 .then(resolve)
                 .catch(errorLogging);
               break;
             case 'getStatus':
               getStatus(body)
-                .then(resolve)
-                .catch(errorLogging);
-              break;
-            case 'logInWithPhoneNumber':
-              loginWithPhone(body)
-                .then(resolve)
-                .catch(errorLogging);
-              break;
-            case 'sendReceivedSmsCode':
-              sendReceivedSmsCode(body)
                 .then(resolve)
                 .catch(errorLogging);
               break;
@@ -58,6 +73,7 @@ export default (req, logger) => {
                 .catch(errorLogging);
               break;
             case 'getExitOrderDetails':
+              // is this still used
               getExitOrderDetails(body)
                 .then(resolve)
                 .catch(errorLogging);
@@ -73,12 +89,14 @@ export default (req, logger) => {
                 .catch(errorLogging);
               break;
             case 'createOrder':
-              createOrder(body)
+              // to fiat
+              createFiatOrder(body)
                 .then(resolve)
                 .catch(errorLogging);
               break;
             case 'getOrderDetails':
-              createOrderDetails(body)
+              // fiat
+              createFiatOrderDetails(body)
                 .then(resolve)
                 .catch(errorLogging);
               break;

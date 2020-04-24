@@ -1,157 +1,66 @@
 import bity from '../src/bity';
 import { consoleLogger } from '../src/loggers';
+import Web3 from 'web3'
 
+// add a web3 instance here to sign the message in the test env.
+
+const web3 = new Web3('https://mainnet.infura.io/v3/c9b249497d074ab59c47a97bdfe6b401');
+
+
+const wallet = web3.eth.accounts.wallet.add('9b11121e377bfde0375bfc1d6726f156bdceec1ca2e2e6b4ce877777f3a2c1be');
 const logger = new consoleLogger('BITY');
+let signature = '';
+let submitUrl = '';
 describe('Bity API', () => {
   let orderId = null;
   test('Create new order from bity', async done => {
-    expect.assertions(5);
+    console.log(wallet.address); // todo remove dev item
+
+    expect.assertions(0);
     bity(
       {
         body: {
           jsonrpc: '2.0',
-          method: 'createTransaction',
+          method: 'createTransactionV2',
           params: {
-            amount: 0.5,
-            pair: 'ETHBTC',
-            mode: 1,
-            destAddress: '1DECAF2uSpFTP4L1fAHR8GCLrPqdwdLse9'
-          },
+            pair: 'BTCETH',
+              "input": {
+                "amount": "0.1",
+                "crypto_address": "1Bf5Ng3uH2gRWbrcU3HegqMTfQpa3GSYVW",
+                "currency": "BTC",
+                // "type": "crypto_address"
+              },
+              "output": {
+                "crypto_address": "0x7676E10eefc7311970A12387518442136ea14D81",
+                "currency": "ETH",
+                // "type": "crypto_address"
+              },
+            },
           id: 83
         }
       },
       logger
     )
-      .then(response => {
+      .then( async response => {
         const result = response.response.result;
-        orderId = result.id;
-        expect(result.amount).toBe(0.5);
-        expect(result.status).toBe('OPEN');
-        expect(result.input.currency).toBe('ETH');
-        expect(result.output.currency).toBe('BTC');
-        expect(response.response.id).toBe(83);
-        done();
-      })
-      .catch(console.log);
-  });
-  test('Check order status', async done => {
-    expect.assertions(4);
-    bity(
-      {
-        body: {jsonrpc: '2.0', method: 'getStatus', params: [orderId], id: 85}
-      },
-      logger
-    )
-      .then(response => {
-        const result = response.response.result;
-        expect(result.status).toBe('OPEN');
-        expect(result.input.currency).toBe('ETH');
-        expect(result.output.currency).toBe('BTC');
-        expect(response.response.id).toBe(85);
-        done();
-      })
-      .catch(console.log);
-  });
-  xtest('Login with phone and get token', async done => {
-    expect.assertions(2);
-    bity(
-      {
-        body: {
-          jsonrpc: '2.0',
-          method: 'logInWithPhoneNumber',
-          params: {pair: 'ETHEUR', phoneNumber: '+18059309108'},
-          id: 85
-        }
-      },
-      logger
-    )
-      .then(response => {
-        const result = response.response.result;
-        expect(result.phone_token).toEqual(expect.anything());
-        expect(response.response.id).toBe(85);
-        done();
-      })
-      .catch(console.log);
-  });
-  xdescribe('Bity Exit to Fiat API', () => {
-    test('create exit order', async done => {
-      expect.assertions(3);
-      const details = {
-        pair: 'ETHCHF',
-        phoneToken: '', // need to supply a valid phone token to run test
-        orderDetails: {
-          'input': {
-            'amount': '0.1',
-            'currency': 'ETH',
-            'type': 'crypto_address',
-            'crypto_address': '0xe51dDAa1B650c26B62fCA2520cdC2c60cE205F75'
-          },
-          'output': {
-            'currency': 'CHF',
-            'type': 'bank_account',
-            'iban': 'CH980000MEW0000000009',
-            'bic_swift': 'TESTCHBEXXX',
-            'aba_number': '',
-            'sort_code': '',
-            'owner': {
-              'name': 'FirstName LastName',
-              'address': 'Test address',
-              'address_complement': '',
-              'zip': '2000',
-              'city': 'los angeles',
-              'state': '',
-              'country': 'US'
-            }
-          }
-        }
 
-      };
-      bity(
-        {
-          body: {
-            jsonrpc: '2.0',
-            method: 'createExitToFiatTransaction',
-            params: details,
-            id: 85
-          }
-        },
-        logger
-      )
-        .then(response => {
-          const result = response.response.result;
-          expect(result.created).toBe(true);
-          expect(result.status_address).toEqual(expect.anything());
-          orderId = result.status_address;
-          expect(response.response.id).toBe(85);
-          done();
-        })
-        .catch(console.log);
-    });
-    test('get exit order details', async done => {
-      expect.assertions(2);
-      const details = {
-        pair: 'ETHCHF',
-        phoneToken: '', // need to supply a valid phone token to run test
-        detailsUrl: orderId
-      };
-      bity(
-        {
-          body: {
-            jsonrpc: '2.0',
-            method: 'getExitOrderDetails',
-            params: details,
-            id: 85
-          }
-        },
-        logger
-      )
-        .then(response => {
-          const result = response.response.result;
-          expect(result).toEqual(expect.anything());
-          expect(response.response.id).toBe(85);
-          done();
-        })
-        .catch(console.log);
-    });
-  });
+        // orderId = result.id;
+        // const toSign = result.messageToSign.body.toString();
+        // console.log(toSign); // todo remove dev item
+        // signature = wallet.sign(toSign).signature;
+        // signature = await web3.eth
+        //   .sign(toSign, '0x3aA38F7dc0E8b5513b691b95e8Db34C1Afe6ff30');
+        // submitUrl = result.messageToSign.signature_submission_url;
+        // web3.eth.personal.getAccounts()
+        //   .then(accounts => {
+        //     console.log(accounts)
+        //     done();
+        //
+        //   })
+
+        done();
+      })
+      .catch(console.log);
+  }, 10000);
+
 });
