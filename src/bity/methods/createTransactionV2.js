@@ -15,33 +15,37 @@ const encryptor = new SimpleEncryptor(configs.encryptionKey);
  */
 const formatResponse = (response, reqBody) => {
   return new Promise((resolve, reject) => {
-    const statusId = response.result.headers['location'].replace('/api/v2/orders/', '').replace('/v2/orders/', '');
+    try {
+      const statusId = response.result.headers['location'].replace('/api/v2/orders/', '').replace('/v2/orders/', '');
 
-    const options = {
-      url: configs.API_V2 + `/v2/orders/${statusId}`,
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + response.token
-      },
-      method: 'GET'
-    };
+      const options = {
+        url: configs.API_V2 + `/v2/orders/${statusId}`,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + response.token
+        },
+        method: 'GET'
+      };
 
-    requestPromise(options)
-      .then(rawRes => {
-        const res = JSON.parse(rawRes)
-        console.log(res);
-        resolve({
-          id: statusId,
-          input: res.input,
-          output: res.output,
-          payment_details: res.payment_details,
-          legacy_status: res.legacy_status,
-          timestamp_created: res.timestamp_created,
-          messageToSign: res.message_to_sign,
-          validFor: 600,
-          token: response.token
+      requestPromise(options)
+        .then(rawRes => {
+          const res = JSON.parse(rawRes);
+          console.log(res);
+          resolve({
+            id: statusId,
+            input: res.input,
+            output: res.output,
+            payment_details: res.payment_details,
+            legacy_status: res.legacy_status,
+            timestamp_created: res.timestamp_created,
+            messageToSign: res.message_to_sign,
+            validFor: 600,
+            token: encryptor.encrypt(response.token)
+          });
         });
-      });
+    } catch (e) {
+      reject(e);
+    }
   });
 };
 

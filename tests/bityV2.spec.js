@@ -13,35 +13,54 @@ let signature = '';
 let submitUrl = '';
 describe('Bity API', () => {
   let orderId = null;
-  test('submit sig to bity', async done => {
+  test('Create new order from bity', async done => {
+    console.log(wallet.address); // todo remove dev item
+
     expect.assertions(0);
     bity(
       {
         body: {
           jsonrpc: '2.0',
-          method: 'sendSignedMessageV2',
+          method: 'createTransactionV2',
           params: {
-            signature: '0x5ff250e1a7712eae9950b4630e471d68929261ead39481cb718bc9eeb460ca9e591f4d5fba0ad6c955f301bf7a91b8d6c4f3c0c0d5532055ac74e9ede632beed00',
-            signature_submission_url: '/v2/orders/651c4003-e77d-464a-9876-9f8c7a509b75/signature'
-          },
+            pair: 'BTCETH',
+              "input": {
+                "amount": "0.1",
+                "crypto_address": "1Bf5Ng3uH2gRWbrcU3HegqMTfQpa3GSYVW",
+                "currency": "BTC",
+                // "type": "crypto_address"
+              },
+              "output": {
+                "crypto_address": "0x7676E10eefc7311970A12387518442136ea14D81",
+                "currency": "ETH",
+                // "type": "crypto_address"
+              },
+            },
           id: 83
         }
       },
       logger
     )
-      .then(response => {
+      .then( async response => {
         const result = response.response.result;
-        console.log("=================="); // todo remove dev item
-        console.log(result); // todo remove dev item
-        orderId = result.id;
-        // expect(result.amount).toBe(0.5);
-        // expect(result).toBe(expect.anything());
-        // expect(result.input.currency).toBe('ETH');
-        // expect(result.output.currency).toBe('BTC');
-        // expect(response.response.id).toBe(83);
+
+        // orderId = result.id;
+        // const toSign = result.messageToSign.body.toString();
+        // console.log(toSign); // todo remove dev item
+        // signature = wallet.sign(toSign).signature;
+        // signature = await web3.eth
+        //   .sign(toSign, '0x3aA38F7dc0E8b5513b691b95e8Db34C1Afe6ff30');
+        // submitUrl = result.messageToSign.signature_submission_url;
+        // web3.eth.personal.getAccounts()
+        //   .then(accounts => {
+        //     console.log(accounts)
+        //     done();
+        //
+        //   })
+
         done();
       })
       .catch(console.log);
-  });
+  }, 10000);
 
 });

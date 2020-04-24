@@ -11,6 +11,7 @@ import createFiatOrder from './createFiatOrder'
 import createFiatOrderDetails from './createFiatOrderDetails'
 import sendSignedMessageV2 from './sendSignedMessageV2'
 import getCryptoOrderDetailsV2 from './getCryptoOrderDetailsV2'
+import getStatusV2 from './getStatusV2';
 
 export {
   getEstimate,
@@ -25,5 +26,6 @@ export {
   createFiatOrder,
   createFiatOrderDetails,
   sendSignedMessageV2,
-  getCryptoOrderDetailsV2
+  getCryptoOrderDetailsV2,
+  getStatusV2
 };

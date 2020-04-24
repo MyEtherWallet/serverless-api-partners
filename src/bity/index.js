@@ -13,7 +13,8 @@ import {
   createFiatOrder,
   createFiatOrderDetails,
   sendSignedMessageV2,
-  getCryptoOrderDetailsV2
+  getCryptoOrderDetailsV2,
+  getStatusV2
 } from './methods';
 
 export default (req, logger) => {
@@ -53,6 +54,11 @@ export default (req, logger) => {
               break;
             case 'sendSignedMessageV2':
               sendSignedMessageV2(body)
+                .then(resolve)
+                .catch(errorLogging);
+              break;
+            case 'getStatusV2':
+              getStatusV2(body)
                 .then(resolve)
                 .catch(errorLogging);
               break;
