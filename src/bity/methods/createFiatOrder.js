@@ -3,6 +3,7 @@ import statusRequest from '../bityRequestOnlyStatusResponse';
 import {error, success} from '../../response';
 import SimpleEncryptor from 'simple-encryptor';
 import request from 'request';
+
 const encryptor = new SimpleEncryptor(configs.encryptionKey);
 
 const formatResponse = order => {
@@ -53,11 +54,11 @@ const requestor = (req) => {
   return statusRequest(options, 'yes');
 };
 
- const wrappedRequest = (req, data) => {
+const wrappedRequest = (req, data) => {
   var options = {
     url: req.url,
     headers: req.headers,
-    method: req.method || "POST",
+    method: req.method || 'POST',
     body: JSON.stringify(data)
   };
 
@@ -136,6 +137,17 @@ const cryptoToFiat = body => {
 
         wrappedRequest(req, reqBody)
           .then(result => {
+            if (result.body.length > 1) {
+              const parsed = JSON.parse(result.body).errors;
+              if (parsed.length > 0) {
+                if (parsed[0]) {
+                  if (parsed[0].message) {
+                    throw Error(parsed[0].message);
+                  }
+                }
+              }
+              throw Error(JSON.stringify(parsed[0]));
+            }
             const createDetails = formatResponse(result);
             if (!createDetails.created) {
               return createDetails;
@@ -164,12 +176,13 @@ const cryptoToFiat = body => {
               });
           })
           .catch(err => {
-            reject(error(err, '2'));
+            reject(error(err.message, '2'));
           });
       })
       .catch(err => {
-      reject(error(err, '1'));
-    });;
+        reject(error(err, '1'));
+      });
+    ;
 
   });
 };

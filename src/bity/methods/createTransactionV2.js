@@ -99,7 +99,7 @@ export default body => {
         );
       })
       .catch(err => {
-        reject(error(err, ''));
+        reject(error(err.message, ''));
       });
   });
 };
