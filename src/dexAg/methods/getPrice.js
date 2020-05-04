@@ -15,13 +15,25 @@ export default body => {
     };
     request(req)
       .then(result => {
-        resolve(
-          success({
-            jsonrpc: '2.0',
-            result: JSON.parse(result),
-            id: body.id
-          })
-        );
+        if(!Array.isArray(JSON.parse(result))){
+          console.log(result);
+          resolve(
+            success({
+              jsonrpc: '2.0',
+              result: [],
+              id: body.id
+            })
+          );
+        } else {
+          resolve(
+            success({
+              jsonrpc: '2.0',
+              result: JSON.parse(result),
+              id: body.id
+            })
+          );
+        }
+
       })
       .catch(err => {
         reject(error(err, ''));
