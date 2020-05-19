@@ -1,6 +1,7 @@
 require("dotenv").config();
 export default {
-  CHANGELLY_SECRET: process.env.CHANGELLY_SECRET || "",
-  CHANGELLY_API_KEY: process.env.CHANGELLY_API_KEY || "",
-  API_URL: "https://api.ipfs.temporal.cloud"
+  TEMPORAL_USERNAME: process.env.TEMPORAL_USERNAME || "",
+  TEMPORAL_PW: process.env.TEMPORAL_PW || "",
+  API_LOGIN_URL: "https://api.temporal.cloud/v2/auth/login",
+  API_UPLOAD_URL: "https://api.temporal.cloud/v2/ipfs/public/file/add"
 };
