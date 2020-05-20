@@ -5,5 +5,7 @@ export default {
   API_LOGIN_URL: "https://api.temporal.cloud/v2/auth/login",
   API_UPLOAD_URL: "https://api.temporal.cloud/v2/ipfs/public/file/add",
   REGION: "us-west-2",
-  BUCKET_NAME: "mew-ipfs-bucket"
+  BUCKET_NAME: "mew-ipfs-bucket",
+  UPLOAD_METHOD: "getUploadUrl",
+  UPLOAD_COMPLETE: "uploadComplete"
 };

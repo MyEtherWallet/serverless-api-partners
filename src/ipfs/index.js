@@ -1,4 +1,5 @@
 import {error, success} from '../response';
+import {v4} from 'uuid';
 import ipfsConfig from './config';
 import AWS from 'aws-sdk';
 AWS.config.update({ region: ipfsConfig.REGION || 'us-east-2' })
@@ -32,13 +33,14 @@ function uploadToIpfs(resolve, reject, token, file) {
 }
 
 export default (req, logger) => {
+  const hash = uuidv4()
   return new Promise((resolve, reject) => {
     if(req.body) {
       if (logger) logger.process(body);
-      if(req.body.requestKey && req.body.file) {
+      if(req.method === ipfsConfig.UPLOAD_METHOD) {
         const s3Params = {
           Bucket: ipfsConfig.BUCKET_NAME,
-          Key:  req.body.name,
+          Key:  hash,
           ContentType: 'application/zip'
         }
 
@@ -50,7 +52,7 @@ export default (req, logger) => {
             "name": req.body.name
           })
         });
-      } else if (req.body.hash) {
+      } else if (req.method === ipfsConfig.UPLOAD_COMPLETE) {
         // get file from s3
         // unzip file
         // login to temporal
