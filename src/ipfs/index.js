@@ -17,6 +17,7 @@ function loginToTemporal(usr, pw) {
 }
 
 function uploadToIpfs(resolve, reject, token, file) {
+  // unzip file
   const data = new FormData();
   data.append("file", file);
   data.append("hold_time", holdTime);
@@ -33,7 +34,7 @@ function uploadToIpfs(resolve, reject, token, file) {
 }
 
 export default (req, logger) => {
-  const hash = uuidv4()
+  const hash = v4()
   return new Promise((resolve, reject) => {
     if(req.body) {
       if (logger) logger.process(body);
@@ -41,22 +42,36 @@ export default (req, logger) => {
         const s3Params = {
           Bucket: ipfsConfig.BUCKET_NAME,
           Key:  hash,
-          ContentType: 'application/zip'
+          ContentType: 'application/zip',
+          ACL: 'public-read',
+          "content-length-range": [104857, 50485760]
         }
-
         const signedUrl = s3.getSignedUrl('putObject', s3Params);
         resolve({
           "statusCode": 200,
           "body": JSON.stringify({
             "signedUrl": signedUrl,
-            "name": req.body.name
+            "hashResponse": hash
           })
         });
       } else if (req.method === ipfsConfig.UPLOAD_COMPLETE) {
+        const fileHash = req.body.hash;
+        const s3Params = {
+          Bucket: ipfsConfig.BUCKET_NAME,
+          Key:  fileHash
+        }
         // get file from s3
-        // unzip file
-        // login to temporal
-        // upload files to ipfs
+        const url = s3.getSignedUrl('getObject', s3Params);
+        const fetchFile = fetch(url).then(res => {
+          return res.json();
+        }).catch(reject);
+        fetchFile.then(file => {
+          // login to temporal
+          loginToTemporal(ipfsConfig.TEMPORAL_USERNAME, ipfsConfig.TEMPORAL_PW).then(token => {
+            // upload files to ipfs
+            uploadToIpfs(resolve, reject, token, file);
+          })
+        })
       } else {
         reject("Can't understand API call")
       }
