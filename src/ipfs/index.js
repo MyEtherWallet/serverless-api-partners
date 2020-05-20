@@ -1,8 +1,11 @@
 import {error, success} from '../response';
 import ipfsConfig from './config';
+import AWS from 'aws-sdk';
+AWS.config.update({ region: ipfsConfig.REGION || 'us-east-2' })
+const s3 = new AWS.S3();
 // import request from '../request';
 
-function login(usr, pw) {
+function loginToTemporal(usr, pw) {
   return fetch(ipfsConfig.API_LOGIN_URL, {
     method: 'POST',
     body: JSON.stringify({
@@ -12,7 +15,7 @@ function login(usr, pw) {
   })
 }
 
-function upload(resolve, reject, token, file) {
+function uploadToIpfs(resolve, reject, token, file) {
   const data = new FormData();
   data.append("file", file);
   data.append("hold_time", holdTime);
@@ -32,13 +35,36 @@ export default (req, logger) => {
   return new Promise((resolve, reject) => {
     if(req.body) {
       if (logger) logger.process(body);
-      const tokenCall = login(ipfsConfig.TEMPORAL_USERNAME, ipfsConfig.TEMPORAL_PW).then((res) => {
-        return res.json();
-      }).catch(error);
+      if(req.body.requestKey && req.body.file) {
+        const s3Params = {
+          Bucket: ipfsConfig.BUCKET_NAME,
+          Key:  req.body.name,
+          ContentType: 'application/zip'
+        }
 
-      tokenCall.then(token => {
-        upload(resolve, reject, token, req.body);
-      })
+        const signedUrl = s3.getSignedUrl('putObject', s3Params);
+        resolve({
+          "statusCode": 200,
+          "body": JSON.stringify({
+            "signedUrl": signedUrl,
+            "name": req.body.name
+          })
+        });
+      } else if (req.body.hash) {
+        // get file from s3
+        // unzip file
+        // login to temporal
+        // upload files to ipfs
+      } else {
+        reject("Can't understand API call")
+      }
+      // const tokenCall = login(ipfsConfig.TEMPORAL_USERNAME, ipfsConfig.TEMPORAL_PW).then((res) => {
+      //   return res.json();
+      // }).catch(error);
+
+      // tokenCall.then(token => {
+      //   upload(resolve, reject, token, req.body);
+      // })
       
     } else {
       reject('No IPFS attached');

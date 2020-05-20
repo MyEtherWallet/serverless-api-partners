@@ -4,7 +4,7 @@ import bity from "./bity";
 import kyber from './kyber'
 import dexAg from './dexAg'
 import proxy from './proxy'
-import ipfs from './ipfs/config'
+import ipfs from './ipfs'
 import { cloudWatchLogger } from "./loggers";
 
 api.post("/changelly", request => {
@@ -34,8 +34,9 @@ api.get("/proxy", request => {
 
 api.get("/ipfs", request => {
   const cloudwatch = new cloudWatchLogger("IPFS");
-  return proxy(request, cloudwatch);
+  return ipfs(request, cloudwatch);
 });
+
 
 api.get("/", () => "MyEtherWallet Partners API");
 
