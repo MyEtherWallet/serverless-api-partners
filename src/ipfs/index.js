@@ -9,14 +9,14 @@ const { globSource } = IpfsHttpClient;
 const PATH = './temp';
 AWS.config.update({ region: ipfsConfig.REGION || 'us-east-2' })
 const s3 = new AWS.S3();
-fs.mkdir(PATH);
+fs.mkdirSync(PATH);
 
 function loginToTemporal(usr, pw) {
   return fetch(ipfsConfig.API_LOGIN_URL, {
     method: 'POST',
     body: JSON.stringify({
         "username": usr.toString(),
-        "password": pw.toString()
+        "password": usr.toString()
     })
   })
 }
@@ -44,6 +44,7 @@ async function uploadToIpfs(resolve, reject, token, file) {
   }
   // ipfs.add(globSource(PATH, {recursive: true})).then(response => {
   // })
+
 
   // const data = new FormData();
   // data.append("file", file);
