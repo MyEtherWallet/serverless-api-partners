@@ -67,7 +67,7 @@ export default (req, logger) => {
   const hash = v4()
   return new Promise((resolve, reject) => {
     if(req.body) {
-      if (logger) logger.process(body);
+      if (logger) logger.process(req.body);
       if(req.body.method === ipfsConfig.UPLOAD_METHOD) {
         const s3Params = {
           Bucket: ipfsConfig.BUCKET_NAME,
