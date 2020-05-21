@@ -6,10 +6,9 @@ import AWS from 'aws-sdk';
 import fs from 'fs';
 import IpfsHttpClient from 'ipfs-http-client';
 const { globSource } = IpfsHttpClient;
-const PATH = './temp';
+const PATH = '/tmp';
 AWS.config.update({ region: ipfsConfig.REGION || 'us-east-2' })
 const s3 = new AWS.S3();
-fs.mkdirSync(PATH);
 
 function loginToTemporal(usr, pw) {
   return fetch(ipfsConfig.API_LOGIN_URL, {
@@ -23,6 +22,7 @@ function loginToTemporal(usr, pw) {
 
 async function uploadToIpfs(resolve, reject, token, file) {
   // unzip file
+  fs.mkdirSync(PATH);
   const unzipped = new AdmZip(file);
   unzipped.extractAllTo(PATH);
 
@@ -35,7 +35,7 @@ async function uploadToIpfs(resolve, reject, token, file) {
 
   try {
     for await (const file of ipfs.add(globSource('./docs', { recursive: true }))) {
-      if(file.path === PATH.replace('./', '')) {
+      if(file.path === PATH.replace('/', '')) {
         resolve(file.cid);
       }
     }
