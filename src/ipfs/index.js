@@ -70,8 +70,7 @@ export default (req) => {
           Bucket: ipfsConfig.BUCKET_NAME,
           Key:  hash,
           ContentType: 'application/zip',
-          ACL: 'public-read',
-          "content-length-range": [104857, 50485760]
+          ACL: 'public-read'
         }
         const signedUrl = s3.getSignedUrl('putObject', s3Params);
         resolve({
