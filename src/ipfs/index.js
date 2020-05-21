@@ -5,6 +5,7 @@ import ipfsConfig from './config';
 import AWS from 'aws-sdk';
 import fs from 'fs';
 import IpfsHttpClient from 'ipfs-http-client';
+import fetch from 'node-fetch';
 const { globSource } = IpfsHttpClient;
 const PATH = '/tmp';
 AWS.config.update({ region: ipfsConfig.REGION || 'us-east-2' })
@@ -17,7 +18,7 @@ function loginToTemporal(usr, pw) {
     method: 'POST',
     body: JSON.stringify({
         "username": usr.toString(),
-        "password": usr.toString()
+        "password": pw.toString()
     })
   })
 }
