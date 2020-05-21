@@ -8,7 +8,9 @@ import IpfsHttpClient from 'ipfs-http-client';
 const { globSource } = IpfsHttpClient;
 const PATH = '/tmp';
 AWS.config.update({ region: ipfsConfig.REGION || 'us-east-2' })
-const s3 = new AWS.S3();
+const s3 = new AWS.S3({
+  signatureVersion: 'v4'
+});
 
 function loginToTemporal(usr, pw) {
   return fetch(ipfsConfig.API_LOGIN_URL, {
@@ -65,8 +67,7 @@ export default (req) => {
   const hash = v4()
   return new Promise((resolve, reject) => {
     if(req.body) {
-      const parsedBody = JSON.parse(req.body);
-      if(parsedBody.action === ipfsConfig.UPLOAD_METHOD) {
+      if(req.body.action === ipfsConfig.UPLOAD_METHOD) {
         const s3Params = {
           Bucket: ipfsConfig.BUCKET_NAME,
           Key:  "test.zip",
@@ -82,8 +83,8 @@ export default (req) => {
             })
           })
         );
-      } else if (parsedBody.action === ipfsConfig.UPLOAD_COMPLETE) {
-        const fileHash = parsedBody.hash;
+      } else if (req.body.action === ipfsConfig.UPLOAD_COMPLETE) {
+        const fileHash = req.body.hash;
         const s3Params = {
           Bucket: ipfsConfig.BUCKET_NAME,
           Key:  fileHash
