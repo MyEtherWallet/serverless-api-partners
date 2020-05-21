@@ -65,7 +65,8 @@ export default (req) => {
   const hash = v4()
   return new Promise((resolve, reject) => {
     if(req.body) {
-      if(req.body.method === ipfsConfig.UPLOAD_METHOD) {
+      const parsedBody = JSON.parse(req.body);
+      if(parsedBody.action === ipfsConfig.UPLOAD_METHOD) {
         const s3Params = {
           Bucket: ipfsConfig.BUCKET_NAME,
           Key:  hash,
@@ -82,8 +83,8 @@ export default (req) => {
             })
           })
         );
-      } else if (req.body.method === ipfsConfig.UPLOAD_COMPLETE) {
-        const fileHash = req.body.hash;
+      } else if (parsedBody.action === ipfsConfig.UPLOAD_COMPLETE) {
+        const fileHash = parsedBody.hash;
         const s3Params = {
           Bucket: ipfsConfig.BUCKET_NAME,
           Key:  fileHash
