@@ -1,9 +1,15 @@
 import {error, success} from '../response';
 import {v4} from 'uuid';
+import AdmZip from 'adm-zip';
 import ipfsConfig from './config';
 import AWS from 'aws-sdk';
+import fs from 'fs';
+import IpfsHttpClient from 'ipfs-http-client';
+const { globSource } = IpfsHttpClient;
+const PATH = './temp';
 AWS.config.update({ region: ipfsConfig.REGION || 'us-east-2' })
 const s3 = new AWS.S3();
+fs.mkdir(PATH);
 // import request from '../request';
 
 function loginToTemporal(usr, pw) {
@@ -16,21 +22,44 @@ function loginToTemporal(usr, pw) {
   })
 }
 
-function uploadToIpfs(resolve, reject, token, file) {
+async function uploadToIpfs(resolve, reject, token, file) {
   // unzip file
-  const data = new FormData();
-  data.append("file", file);
-  data.append("hold_time", holdTime);
-  fetch( ipfsConfig.API_UPLOAD_URL, {
-    method: 'POST',
-    header: {
-      "Authorization": `Bearer ${token}`,
-      "Cache-Control": "no-cache"
-    },
-    body: data
-  }).then(hash => {
-    resolve(hash);
-  }).catch(reject);
+  const unzipped = new AdmZip(file);
+  unzipped.extractAllTo(PATH);
+
+  const ipfs = IpfsHttpClient({
+    host: ipfsConfig.API_UPLOAD_URL,
+    headers: {
+      authorization: `Bearer ${token}`
+    }
+  });
+
+  try {
+    for await (const file of ipfs.add(globSource('./docs', { recursive: true }))) {
+      if(file.path === PATH.replace('./', '')) {
+        resolve(file.cid);
+      }
+    }
+  } catch(e) {
+    reject(e);
+  }
+  // ipfs.add(globSource(PATH, {recursive: true})).then(response => {
+  // })
+
+
+  // const data = new FormData();
+  // data.append("file", file);
+  // data.append("hold_time", holdTime);
+  // fetch( ipfsConfig.API_UPLOAD_URL, {
+  //   method: 'POST',
+  //   header: {
+  //     "Authorization": `Bearer ${token}`,
+  //     "Cache-Control": "no-cache"
+  //   },
+  //   body: data
+  // }).then(hash => {
+  //   resolve(hash);
+  // }).catch(reject);
 }
 
 export default (req, logger) => {
@@ -38,7 +67,7 @@ export default (req, logger) => {
   return new Promise((resolve, reject) => {
     if(req.body) {
       if (logger) logger.process(body);
-      if(req.method === ipfsConfig.UPLOAD_METHOD) {
+      if(req.body.method === ipfsConfig.UPLOAD_METHOD) {
         const s3Params = {
           Bucket: ipfsConfig.BUCKET_NAME,
           Key:  hash,
@@ -54,7 +83,7 @@ export default (req, logger) => {
             "hashResponse": hash
           })
         });
-      } else if (req.method === ipfsConfig.UPLOAD_COMPLETE) {
+      } else if (req.body.method === ipfsConfig.UPLOAD_COMPLETE) {
         const fileHash = req.body.hash;
         const s3Params = {
           Bucket: ipfsConfig.BUCKET_NAME,
