@@ -69,9 +69,8 @@ export default (req) => {
       if(parsedBody.action === ipfsConfig.UPLOAD_METHOD) {
         const s3Params = {
           Bucket: ipfsConfig.BUCKET_NAME,
-          Key:  hash,
-          ContentType: 'application/zip',
-          ACL: 'public-read'
+          Key:  "test.zip",
+          ContentType: 'application/zip'
         }
         const signedUrl = s3.getSignedUrl('putObject', s3Params);
         resolve(
