@@ -36,11 +36,11 @@ async function uploadToIpfs(resolve, reject, token, file) {
   try {
     for await (const file of ipfs.add(globSource('./docs', { recursive: true }))) {
       if(file.path === PATH.replace('/', '')) {
-        resolve(file.cid);
+        resolve(success(file.cid));
       }
     }
   } catch(e) {
-    reject(e);
+    reject(error(e));
   }
   // ipfs.add(globSource(PATH, {recursive: true})).then(response => {
   // })
@@ -73,13 +73,15 @@ export default (req) => {
           ACL: 'public-read'
         }
         const signedUrl = s3.getSignedUrl('putObject', s3Params);
-        resolve({
-          "statusCode": 200,
-          "body": JSON.stringify({
-            "signedUrl": signedUrl,
-            "hashResponse": hash
+        resolve(
+          success({
+            "statusCode": 200,
+            "body": JSON.stringify({
+              "signedUrl": signedUrl,
+              "hashResponse": hash
+            })
           })
-        });
+        );
       } else if (req.body.method === ipfsConfig.UPLOAD_COMPLETE) {
         const fileHash = req.body.hash;
         const s3Params = {
@@ -90,7 +92,9 @@ export default (req) => {
         const url = s3.getSignedUrl('getObject', s3Params);
         const fetchFile = fetch(url).then(res => {
           return res.json();
-        }).catch(reject);
+        }).catch(e => {
+          reject(error(e));
+        });
         fetchFile.then(file => {
           // login to temporal
           loginToTemporal(ipfsConfig.TEMPORAL_USERNAME, ipfsConfig.TEMPORAL_PW).then(token => {
@@ -99,7 +103,7 @@ export default (req) => {
           })
         })
       } else {
-        reject("Can't understand API call")
+        reject(error("Can't understand API call"))
       }
       // const tokenCall = login(ipfsConfig.TEMPORAL_USERNAME, ipfsConfig.TEMPORAL_PW).then((res) => {
       //   return res.json();
@@ -110,7 +114,7 @@ export default (req) => {
       // })
       
     } else {
-      reject('No IPFS attached');
+      reject(error('No IPFS attached'));
     }
   })
 };
