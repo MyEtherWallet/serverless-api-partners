@@ -32,7 +32,7 @@ api.get("/proxy", request => {
   return proxy(request, cloudwatch);
 });
 
-api.get("/ipfs", request => {
+api.post("/ipfs", request => {
   const cloudwatch = new cloudWatchLogger("IPFS");
   return ipfs(request, cloudwatch);
 });

@@ -10,14 +10,13 @@ const PATH = './temp';
 AWS.config.update({ region: ipfsConfig.REGION || 'us-east-2' })
 const s3 = new AWS.S3();
 fs.mkdir(PATH);
-// import request from '../request';
 
 function loginToTemporal(usr, pw) {
   return fetch(ipfsConfig.API_LOGIN_URL, {
     method: 'POST',
     body: JSON.stringify({
-        "username": username.toString(),
-        "password": password.toString()
+        "username": usr.toString(),
+        "password": pw.toString()
     })
   })
 }
@@ -46,7 +45,6 @@ async function uploadToIpfs(resolve, reject, token, file) {
   // ipfs.add(globSource(PATH, {recursive: true})).then(response => {
   // })
 
-
   // const data = new FormData();
   // data.append("file", file);
   // data.append("hold_time", holdTime);
@@ -62,11 +60,10 @@ async function uploadToIpfs(resolve, reject, token, file) {
   // }).catch(reject);
 }
 
-export default (req, logger) => {
+export default (req) => {
   const hash = v4()
   return new Promise((resolve, reject) => {
     if(req.body) {
-      if (logger) logger.process(body);
       if(req.body.method === ipfsConfig.UPLOAD_METHOD) {
         const s3Params = {
           Bucket: ipfsConfig.BUCKET_NAME,
