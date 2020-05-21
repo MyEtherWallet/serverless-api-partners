@@ -63,11 +63,10 @@ async function uploadToIpfs(resolve, reject, token, file) {
   // }).catch(reject);
 }
 
-export default (req, logger) => {
+export default (req) => {
   const hash = v4()
   return new Promise((resolve, reject) => {
     if(req.body) {
-      if (logger) logger.process(req.body);
       if(req.body.method === ipfsConfig.UPLOAD_METHOD) {
         const s3Params = {
           Bucket: ipfsConfig.BUCKET_NAME,
@@ -88,7 +87,7 @@ export default (req, logger) => {
         const fileHash = req.body.hash;
         const s3Params = {
           Bucket: ipfsConfig.BUCKET_NAME,
-          Key:  fileHash
+          Key:  `${fileHash}.zip`
         }
         // get file from s3
         const url = s3.getSignedUrl('getObject', s3Params);
