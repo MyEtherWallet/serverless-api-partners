@@ -16,9 +16,12 @@ const s3 = new AWS.S3({
 function loginToTemporal(usr, pw) {
   return fetch(ipfsConfig.API_LOGIN_URL, {
     method: 'POST',
+    headers: {
+      'Content-Type': 'text/plain'
+    },
     body: JSON.stringify({
-        "username": usr.toString(),
-        "password": pw.toString()
+        "username": usr,
+        "password": pw
     })
   })
 }
@@ -76,17 +79,18 @@ export default (req) => {
         // get file from s3
         const signedUrl = s3.getSignedUrl('getObject', s3Params);
         fetch(signedUrl).then(retrievedFile => {
-          // login to temporal
-          loginToTemporal(ipfsConfig.TEMPORAL_USERNAME, ipfsConfig.TEMPORAL_PW).then(tempLogin => {
-            // upload files to ipfs
-            tempLogin.json().then(token => {
+          try {
+            // login to temporal
+            const tokenPromise = loginToTemporal(ipfsConfig.TEMPORAL_USERNAME, ipfsConfig.TEMPORAL_PW).then(tempLogin => {
+              // upload files to ipfs
+              return tempLogin.json();
+            });
+            tokenPromise.then(token => {
               uploadToIpfs(resolve, reject, token, retrievedFile);
-            }).catch(() => {
-              reject(error("Error getting token"))
-            })
-          }).catch(() => {
-            reject(error("Error with logging into temporal"))
-          })
+            }).catch(reject(error("Error fetching temporal token")))
+          } catch(e) {
+            reject(error(e));
+          }
         })
       } else {
         reject(error("Can't understand API call"))
