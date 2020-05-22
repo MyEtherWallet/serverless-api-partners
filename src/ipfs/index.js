@@ -45,23 +45,6 @@ async function uploadToIpfs(resolve, reject, token, file) {
   } catch(e) {
     reject(error(e));
   }
-  // ipfs.add(globSource(PATH, {recursive: true})).then(response => {
-  // })
-
-
-  // const data = new FormData();
-  // data.append("file", file);
-  // data.append("hold_time", holdTime);
-  // fetch( ipfsConfig.API_UPLOAD_URL, {
-  //   method: 'POST',
-  //   header: {
-  //     "Authorization": `Bearer ${token}`,
-  //     "Cache-Control": "no-cache"
-  //   },
-  //   body: data
-  // }).then(hash => {
-  //   resolve(hash);
-  // }).catch(reject);
 }
 
 export default (req) => {
@@ -104,14 +87,6 @@ export default (req) => {
       } else {
         reject(error("Can't understand API call"))
       }
-      // const tokenCall = login(ipfsConfig.TEMPORAL_USERNAME, ipfsConfig.TEMPORAL_PW).then((res) => {
-      //   return res.json();
-      // }).catch(error);
-
-      // tokenCall.then(token => {
-      //   upload(resolve, reject, token, req.body);
-      // })
-      
     } else {
       reject(error('No IPFS attached'));
     }
