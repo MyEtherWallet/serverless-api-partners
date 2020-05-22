@@ -81,7 +81,11 @@ export default (req) => {
             // upload files to ipfs
             tempLogin.json().then(token => {
               uploadToIpfs(resolve, reject, token, retrievedFile);
+            }).catch(e => {
+              reject(error(e))
             })
+          }).catch(e => {
+            reject(error(e))
           })
         })
       } else {
