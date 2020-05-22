@@ -92,11 +92,13 @@ export default (req) => {
         }
         // get file from s3
         const signedUrl = s3.getSignedUrl('getObject', s3Params);
-        fetch(signedUrl).then(res => {
+        fetch(signedUrl).then(retrievedFile => {
           // login to temporal
-          loginToTemporal(ipfsConfig.TEMPORAL_USERNAME, ipfsConfig.TEMPORAL_PW).then(token => {
+          loginToTemporal(ipfsConfig.TEMPORAL_USERNAME, ipfsConfig.TEMPORAL_PW).then(tempLogin => {
             // upload files to ipfs
-            uploadToIpfs(resolve, reject, token, res);
+            tempLogin.json().then(token => {
+              uploadToIpfs(resolve, reject, token, retrievedFile);
+            })
           })
         })
       } else {
