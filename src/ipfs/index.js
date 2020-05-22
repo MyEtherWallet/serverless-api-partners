@@ -91,8 +91,8 @@ export default (req) => {
           Key:  `${fileHash}.zip`
         }
         // get file from s3
-        const url = s3.getSignedUrl('getObject', s3Params);
-        const fetchFile = fetch(url).then(res => {
+        const signedUrl = s3.getSignedUrl('getObject', s3Params);
+        fetch(signedUrl).then(res => {
           // login to temporal
           loginToTemporal(ipfsConfig.TEMPORAL_USERNAME, ipfsConfig.TEMPORAL_PW).then(token => {
             // upload files to ipfs
