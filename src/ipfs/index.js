@@ -43,7 +43,7 @@ async function uploadToIpfs(resolve, reject, token, file) {
       }
     }
   } catch(e) {
-    reject(error(e));
+    reject(error("Error with uploading to temporal"));
   }
 }
 
@@ -81,11 +81,11 @@ export default (req) => {
             // upload files to ipfs
             tempLogin.json().then(token => {
               uploadToIpfs(resolve, reject, token, retrievedFile);
-            }).catch(e => {
-              reject(error(e))
+            }).catch(() => {
+              reject(error("Error getting token"))
             })
-          }).catch(e => {
-            reject(error(e))
+          }).catch(() => {
+            reject(error("Error with logging into temporal"))
           })
         })
       } else {
