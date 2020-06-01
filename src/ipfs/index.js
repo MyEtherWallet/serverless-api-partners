@@ -42,10 +42,8 @@ async function uploadToIpfs(resolve, reject, token, file, hash) {
     port: ipfsConfig.API_UPLOAD_PORT,
     protocol: ipfsConfig.API_UPLOAD_PROTOCOL,
     headers: {
-      authorization: `Bearer ${token.token}`
-    },
-    searchParams: {
-      "hold_time": 24
+      authorization: `Bearer ${token.token}`,
+      "X-Hold-Time": 24
     }
   });
   
