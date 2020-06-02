@@ -30,13 +30,10 @@ function loginToTemporal(usr, pw) {
 async function uploadToIpfs(resolve, reject, token, file, hash) {
   try {
     // unzip file 
-    console.log('create folders to extract to')
     fs.mkdirSync(`${PATH}/${hash}`, {recursive: true});
 
     const unzipped = new AdmZip(file);
-    console.log('unzip files')
     unzipped.extractAllTo(`${PATH}/${hash}`, true);
-    console.log('setup ipfs')
     const ipfs = IpfsHttpClient({
       host: ipfsConfig.API_UPLOAD_HOST,
       port: ipfsConfig.API_UPLOAD_PORT,
@@ -47,16 +44,13 @@ async function uploadToIpfs(resolve, reject, token, file, hash) {
       }
     });
   
-    console.log('upload to ipfs')
     const folderName = fs.readdirSync(`${PATH}/${hash}`);
     if(folderName.length > 0) {
       const file = await ipfs.add(globSource(`${PATH}/${hash}/${folderName[0]}`, {recursive: true}));
       for await (const f of file) {
         if(f.path === folderName[0]) {
           const cid = f.cid.toString();
-          const hex = `0x${contentHash.fromIpfs(cid)}`;
-          console.log('gets to cid', cid)
-          resolve(success(hex));
+          resolve(cid);
         }
       }
     } else {
@@ -115,35 +109,26 @@ export default (req) => {
           Key: `${fileHash}.zip`
         }
         // get file from s3
-        console.log('gets file')
         s3.getObject(s3Params)
         .promise()
         .then(data => {
-          console.log('got file')
             try {
               // login to temporal
-              console.log('tries logging in')
               const tokenPromise = loginToTemporal(ipfsConfig.TEMPORAL_USERNAME, ipfsConfig.TEMPORAL_PW).then(tempLogin => {
                 // upload files to ipfs
                 return tempLogin.json();
               }).catch(e => {
-                console.log('here?')
                 reject(error(e))
               });
               tokenPromise.then(token => {
-                console.log('logged in')
-                console.log('tries uploading', data, token)
                 uploadToIpfs(resolve, reject, token, data.Body, fileHash);
               }).catch(e => {
-                console.log('temporal login error', e)
                 reject(error(e))
               })
             } catch(e) {
-              console.log('hereee???')
               reject(error(e));
             }
         }).catch(e => {
-          console.log('s3 get error')
           reject(error(e))
         });
       } else {
