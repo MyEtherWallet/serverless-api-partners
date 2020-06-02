@@ -8,7 +8,7 @@ import IpfsHttpClient from 'ipfs-http-client';
 import fetch from 'node-fetch';
 import contentHash from 'content-hash';
 const { globSource } = IpfsHttpClient;
-const PATH = './tmp/';
+const PATH = './tmp';
 AWS.config.update({ region: ipfsConfig.REGION || 'us-east-2' })
 const s3 = new AWS.S3({
   signatureVersion: 'v4'
@@ -30,7 +30,7 @@ function loginToTemporal(usr, pw) {
 async function uploadToIpfs(resolve, reject, token, file, hash) {
   // unzip file 
   if(!fs.existsSync(PATH)) {
-    fs.mkdirSync(`${PATH}/${hash}`);
+    fs.mkdirSync(`${PATH}`);
   } else {
     // fs.rmdirSync(PATH);
     fs.mkdirSync(`${PATH}/${hash}`, {recursive: true});
@@ -91,6 +91,7 @@ export default (req) => {
         s3.getObject(s3Params)
         .promise()
         .then(data => {
+          console.log(data, '??')
             try {
               // login to temporal
               const tokenPromise = loginToTemporal(ipfsConfig.TEMPORAL_USERNAME, ipfsConfig.TEMPORAL_PW).then(tempLogin => {
@@ -98,14 +99,17 @@ export default (req) => {
                 return tempLogin.json();
               });
               tokenPromise.then(token => {
-                uploadToIpfs(resolve, reject, token, data.Body);
+                uploadToIpfs(resolve, reject, token, data.Body, fileHash);
               }).catch(e => {
+                console.log('error here?')
                 reject(error(e))
               })
             } catch(e) {
+              console.log('within try')
               reject(error(e));
             }
         }).catch(e => {
+          console.log(e, '?????')
                 reject(error(e))
               });
       } else {
