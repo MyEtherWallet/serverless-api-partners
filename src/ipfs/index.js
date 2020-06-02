@@ -91,7 +91,6 @@ export default (req) => {
         s3.getObject(s3Params)
         .promise()
         .then(data => {
-          console.log(data, '??')
             try {
               // login to temporal
               const tokenPromise = loginToTemporal(ipfsConfig.TEMPORAL_USERNAME, ipfsConfig.TEMPORAL_PW).then(tempLogin => {
@@ -101,15 +100,12 @@ export default (req) => {
               tokenPromise.then(token => {
                 uploadToIpfs(resolve, reject, token, data.Body, fileHash);
               }).catch(e => {
-                console.log('error here?')
                 reject(error(e))
               })
             } catch(e) {
-              console.log('within try')
               reject(error(e));
             }
         }).catch(e => {
-          console.log(e, '?????')
                 reject(error(e))
               });
       } else {
