@@ -28,36 +28,42 @@ function loginToTemporal(usr, pw) {
 }
 
 async function uploadToIpfs(resolve, reject, token, file, hash) {
-  // unzip file 
-  if(!fs.existsSync(PATH)) {
-    fs.mkdirSync(`${PATH}`);
-  } else {
-    // fs.rmdirSync(PATH);
-    fs.mkdirSync(`${PATH}/${hash}`, {recursive: true});
-  }
-  const unzipped = new AdmZip(file);
-  unzipped.extractAllTo(`${PATH}/${hash}`, true);
-  const ipfs = IpfsHttpClient({
-    host: ipfsConfig.API_UPLOAD_HOST,
-    port: ipfsConfig.API_UPLOAD_PORT,
-    protocol: ipfsConfig.API_UPLOAD_PROTOCOL,
-    headers: {
-      authorization: `Bearer ${token.token}`,
-      "X-Hold-Time": 24
-    }
-  });
-  
   try {
-    const folderName = fs.readdirSync(`${PATH}/${hash}`);
-    const file = await ipfs.add(globSource(`${PATH}/${hash}/${folderName[0]}`, {recursive: true}));
-    for await (const f of file) {
-      if(f.path === folderName[0]) {
-        const cid = f.cid.toString();
-        resolve(success(contentHash(cid)));
+    // unzip file 
+    if(!fs.existsSync(PATH)) {
+      fs.mkdirSync(`${PATH}`);
+      fs.mkdirSync(`${PATH}/${hash}`, {recursive: true});
+    } else {
+      fs.mkdirSync(`${PATH}/${hash}`, {recursive: true});
+    }
+
+    const unzipped = new AdmZip(file);
+    unzipped.extractAllTo(`${PATH}/${hash}`, true);
+    const ipfs = IpfsHttpClient({
+      host: ipfsConfig.API_UPLOAD_HOST,
+      port: ipfsConfig.API_UPLOAD_PORT,
+      protocol: ipfsConfig.API_UPLOAD_PROTOCOL,
+      headers: {
+        authorization: `Bearer ${token.token}`,
+        "X-Hold-Time": 24
       }
+    });
+  
+    const folderName = fs.readdirSync(`${PATH}/${hash}`);
+    if(folderName.length > 0) {
+      const file = await ipfs.add(globSource(`${PATH}/${hash}/${folderName[0]}`, {recursive: true}));
+      for await (const f of file) {
+        if(f.path === folderName[0]) {
+          const cid = f.cid.toString();
+          const hex = `0x${contentHash.fromIpfs(cid)}`;
+          resolve(success(hex));
+        }
+      }
+    } else {
+      reject(error("Your uploaded file might be corrupted or empty!"))
     }
   } catch(e) {
-    reject(error("Error with uploading to temporal"));
+    reject(error(e));
   }
 }
 
@@ -116,6 +122,8 @@ export default (req) => {
               const tokenPromise = loginToTemporal(ipfsConfig.TEMPORAL_USERNAME, ipfsConfig.TEMPORAL_PW).then(tempLogin => {
                 // upload files to ipfs
                 return tempLogin.json();
+              }).catch(e => {
+                reject(error(e))
               });
               tokenPromise.then(token => {
                 uploadToIpfs(resolve, reject, token, data.Body, fileHash);
@@ -126,8 +134,8 @@ export default (req) => {
               reject(error(e));
             }
         }).catch(e => {
-                reject(error(e))
-              });
+          reject(error(e))
+        });
       } else {
         reject(error("Can't understand API call"))
       }
