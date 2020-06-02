@@ -63,6 +63,7 @@ async function uploadToIpfs(resolve, reject, token, file, hash) {
       reject(error("Your uploaded file might be corrupted or empty!"))
     }
   } catch(e) {
+    console.log(e)
     reject(error(e));
   }
 }
