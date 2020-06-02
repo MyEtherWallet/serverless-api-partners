@@ -9,7 +9,7 @@
 // ipfs({
 //   "body": {
 //       "method": "uploadComplete",
-//       "hash": "026cad7e-29d8-416f-a5c0-f6f05e8706c9"
+//       "hash": "44df417a-8a9c-467f-aae6-53ab14022912"
 //     }
 // }).then(response=> {
 //   console.log(response)
