@@ -8,8 +8,8 @@
 
 // ipfs({
 //   "body": {
-//       "method": "uploadComplete",
-//       "hash": "44df417a-8a9c-467f-aae6-53ab14022912"
+//       "method": "getUploadUrl",
+//       // "hash": "44df417a-8a9c-467f-aae6-53ab14022912"
 //     }
 // }).then(response=> {
 //   console.log(response)

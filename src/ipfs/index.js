@@ -57,7 +57,6 @@ async function uploadToIpfs(resolve, reject, token, file, hash) {
       }
     }
   } catch(e) {
-    console.log(e);
     reject(error("Error with uploading to temporal"));
   }
 }
@@ -69,19 +68,25 @@ export default (req) => {
       if(req.body.method === ipfsConfig.UPLOAD_METHOD) {
         const s3Params = {
           Bucket: ipfsConfig.BUCKET_NAME,
-          Key:  `${hash}.zip`,
-          ContentType: 'application/zip',
-          Conditions: [["content-length-range", 1000, 50000000]]
+          Fields: {
+            Key:  `${hash}.zip`,
+            ContentType: 'application/zip',
+          }
         }
-        const signedUrl = s3.getSignedUrl('putObject', s3Params);
-        resolve(
-          success({
-            "body": {
-              "signedUrl": signedUrl,
-              "hashResponse": hash
-            }
-          })
-        );
+        s3.createPresignedPost(s3Params, (err, data) => {
+          if(err) {
+            reject(error(err));
+            return;
+          }
+          resolve(
+            success({
+              "body": {
+                "signedUrl": data.url,
+                "hashResponse": hash
+              }
+            })
+          );
+        });
       } else if (req.body.method === ipfsConfig.UPLOAD_COMPLETE) {
         const fileHash = req.body.hash;
         const s3Params = {
