@@ -52,7 +52,8 @@ async function uploadToIpfs(resolve, reject, token, file, hash) {
     const file = await ipfs.add(globSource(`${PATH}/${hash}/${folderName[0]}`, {recursive: true}));
     for await (const f of file) {
       if(f.path === folderName[0]) {
-        resolve(success(f.cid.toString()));
+        const cid = f.cid.toString();
+        resolve(success(contentHash(cid)));
       }
     }
   } catch(e) {
@@ -69,7 +70,8 @@ export default (req) => {
         const s3Params = {
           Bucket: ipfsConfig.BUCKET_NAME,
           Key:  `${hash}.zip`,
-          ContentType: 'application/zip'
+          ContentType: 'application/zip',
+          Conditions: [["content-length-range", 1000, 50000000]]
         }
         const signedUrl = s3.getSignedUrl('putObject', s3Params);
         resolve(
