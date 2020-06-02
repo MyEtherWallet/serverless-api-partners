@@ -66,27 +66,41 @@ export default (req) => {
   return new Promise((resolve, reject) => {
     if(req.body) {
       if(req.body.method === ipfsConfig.UPLOAD_METHOD) {
+        // const s3Params = {
+        //   Bucket: ipfsConfig.BUCKET_NAME,
+        //   Fields: {
+        //     Key:  `${hash}.zip`,
+        //     ContentType: 'application/zip',
+        //   }
+        // }
+        // s3.createPresignedPost(s3Params, (err, data) => {
+        //   if(err) {
+        //     reject(error(err));
+        //     return;
+        //   }
+        //   resolve(
+        //     success({
+        //       "body": {
+        //         "signedUrl": data.url,
+        //         "hashResponse": hash
+        //       }
+        //     })
+        //   );
+        // });
         const s3Params = {
           Bucket: ipfsConfig.BUCKET_NAME,
-          Fields: {
-            Key:  `${hash}.zip`,
-            ContentType: 'application/zip',
-          }
+          Key:  `${hash}.zip`,
+          ContentType: 'application/zip',
         }
-        s3.createPresignedPost(s3Params, (err, data) => {
-          if(err) {
-            reject(error(err));
-            return;
-          }
-          resolve(
-            success({
-              "body": {
-                "signedUrl": data.url,
-                "hashResponse": hash
-              }
-            })
-          );
-        });
+        const signedUrl = s3.getSignedUrl('putObject', s3Params);
+        resolve(
+          success({
+            "body": {
+              "signedUrl": signedUrl,
+              "hashResponse": hash
+            }
+          })
+        );
       } else if (req.body.method === ipfsConfig.UPLOAD_COMPLETE) {
         const fileHash = req.body.hash;
         const s3Params = {
