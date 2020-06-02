@@ -51,9 +51,10 @@ async function uploadToIpfs(resolve, reject, token, file, hash) {
     const folderName = fs.readdirSync(`${PATH}/${hash}`);
     const file = await ipfs.add(globSource(`${PATH}/${hash}/${folderName[0]}`, {recursive: true}));
     for await (const f of file) {
-      if(file.path === folderName[0]) {
-        const actualCid = file.cid.substring(4, file.cid.length -1);
+      if(f.path === folderName[0]) {
+        const actualCid = f.cid.substring(4, f.cid.length -1);
         const hash = contentHash.fromIpfs(actualCid);
+        console.log(hash);
         resolve(success(hash));
       }
     }
