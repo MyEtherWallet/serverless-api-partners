@@ -8,8 +8,8 @@ import ipfs from './src/ipfs/index.js';
 
 ipfs({
   "body": {
-      "method": "uploadComplete",
-      "hash": "bfccc4d7-6f5f-4218-85ff-28fd804d7ce2"
+      "method": "getUploadUrl",
+      // "hash": "bfccc4d7-6f5f-4218-85ff-28fd804d7ce2"
     }
 }).then(response=> {
   console.log(response)
