@@ -72,7 +72,7 @@ export default (req) => {
             key: `${hash}.zip`
           },
           Conditions: [
-            ['content-length-range', 500, 50000000]
+            ['content-length-range', 500, 52428800]
           ]
         }
         s3.createPresignedPost(s3Params, (err, data) => {
