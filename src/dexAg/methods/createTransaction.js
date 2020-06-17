@@ -2,7 +2,14 @@ import configs from '../config';
 import request from '../../request';
 import {error, success} from '../../response';
 
-
+const isJson = json => {
+  try {
+    JSON.parse(json);
+    return true;
+  } catch (e) {
+    throw Error(json)
+  }
+};
 export default body => {
   return new Promise((resolve, reject) => {
     if (!body.params.transactionParams) {
@@ -16,6 +23,7 @@ export default body => {
     };
     request(req)
       .then(result => {
+        isJson(result);
         resolve(
           success({
             jsonrpc: '2.0',

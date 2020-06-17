@@ -1,8 +1,5 @@
-import {error, success} from '../response';
-import changellyConfigs from './config';
+import {error} from '../response';
 import allowedMethods from './validMethods';
-import request from '../request';
-import crypto from 'crypto';
 import {
   createTransaction,
   getPrice,
@@ -14,7 +11,7 @@ export default (req, logger) => {
   return new Promise((resolve, reject) => {
 
     const errorLogging = error => {
-      if (logger) console.log('DEX_AG ERROR', error);
+      if (logger) console.log('DEX_AG ERROR', error, req.body.method);
       if (logger) logger.errorReporter('dexAg');
       reject(error);
     };
