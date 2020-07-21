@@ -15,5 +15,5 @@ const SUPPORTED_DEXES = [
 export default {
   SUPPORTED_DEXES,
   PROXY_CONTRACT_ADDRESS: process.env.DEX_AG_PROXY_CONTRACT_ADDRESS || "",
-  API_URL: "https://api-v2.dex.ag/"
+  API_URL: process.env.DEX_AG_ENDPOINT || "https://api-v2.dex.ag/"
 };
