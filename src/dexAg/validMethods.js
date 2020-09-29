@@ -2,5 +2,6 @@ export default [
   'getPrice',
   'getSupportedCurrencies',
   'createTransaction',
-  'supportedDexes'
+  'supportedDexes',
+  'excludedDexes'
 ];
