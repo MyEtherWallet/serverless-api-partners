@@ -106,6 +106,34 @@ describe('DEX AG API', () => {
       .catch(console.log);
   }, 60000);
 
+  test('Get Supported Currencies for DEX AG', async done => {
+    expect.assertions(1);
+
+    dexag(
+      {
+        body: {
+          jsonrpc: '2.0',
+          method: 'getSupportedCurrencies',
+          params: {},
+          id: 83
+        }
+      },
+      logger
+    )
+      .then(response => {
+        const result = response.response.result;
+        orderId = result.id;
+        console.log(result); // todo remove dev item
+        expect(Array.isArray(result)).toBe(true);
+        // expect(result.status).toBe('OPEN');
+        // expect(result.input.currency).toBe('ETH');
+        // expect(result.output.currency).toBe('BTC');
+        // expect(response.response.id).toBe(83);
+        done();
+      })
+      .catch(console.log);
+  }, 2000);
+
   xtest('Check order status', async done => {
     expect.assertions(4);
     dexag(
