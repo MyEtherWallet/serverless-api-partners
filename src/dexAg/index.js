@@ -7,7 +7,8 @@ import {
   createTransaction,
   getPrice,
   getSupportedCurrencies,
-  supportedDexes
+  supportedDexes,
+  excludedDexes
 } from './methods';
 
 export default (req, logger) => {
@@ -46,6 +47,11 @@ export default (req, logger) => {
               break;
             case 'supportedDexes':
               supportedDexes(body)
+                .then(resolve)
+                .catch(errorLogging);
+              break;
+            case 'excludedDexes':
+              excludedDexes(body)
                 .then(resolve)
                 .catch(errorLogging);
               break;
