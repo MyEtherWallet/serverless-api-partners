@@ -1,21 +1,21 @@
 import bity from '../src/bity';
 import { consoleLogger } from '../src/loggers';
-import Web3 from 'web3'
-import {BityApiClient} from '@bity/api'
-import {Order} from '@bity/models'
-import configs from '../src/bity/config.js';
-import fetch from 'node-libs-browser'
+// import Web3 from 'web3'
+// import {BityApiClient} from '@bity/api'
+// import {Order} from '@bity/models'
+// import configs from '../src/bity/config.js';
+// import fetch from 'node-libs-browser'
 // add a web3 instance here to sign the message in the test env.
 
-const web3 = new Web3('https://mainnet.infura.io/v3/c9b249497d074ab59c47a97bdfe6b401');
+// const web3 = new Web3('https://mainnet.infura.io/v3/c9b249497d074ab59c47a97bdfe6b401');
 
 
-const wallet = web3.eth.accounts.wallet.add('9b11121e377bfde0375bfc1d6726f156bdceec1ca2e2e6b4ce877777f3a2c1be');
+// // const wallet = web3.eth.accounts.wallet.add('9b11121e377bfde0375bfc1d6726f156bdceec1ca2e2e6b4ce877777f3a2c1be');
 const logger = new consoleLogger('BITY');
-let signature = '';
-let submitUrl = '';
+// const signature = '';
+// const submitUrl = '';
 describe('Bity API', () => {
-  let orderId = null;
+  // let orderId = null;
   test('submit sig to bity', async done => {
     expect.assertions(0);
     bity(
@@ -33,11 +33,11 @@ describe('Bity API', () => {
       },
       logger
     )
-      .then(response => {
-        const result = response.response.result;
-        console.log("=================="); // todo remove dev item
-        console.log(result); // todo remove dev item
-        orderId = result.id;
+      .then(() => {
+        // const result = response.response.result;
+        // console.log("=================="); // todo remove dev item
+        // console.log(result); // todo remove dev item
+        // orderId = result.id;
         // expect(result.amount).toBe(0.5);
         // expect(result).toBe(expect.anything());
         // expect(result.input.currency).toBe('ETH');

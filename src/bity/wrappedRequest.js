@@ -1,4 +1,4 @@
-import configs from './config';
+// import configs from './config';
 import request from 'request';
 import getToken from './getToken'
 
@@ -18,7 +18,7 @@ const wrappedRequest = (url, data = {}, returnToken) => {
 
       // https://exchange.api.bity.com/v2/orders/{order_uuid}/signature
       return new Promise((resolve, reject) => {
-        request(options, (error, response, body) => {
+        request(options, (error, response) => {
           if (error) reject(error);
           else {
             if (returnToken) {

@@ -45,7 +45,7 @@ const createPair = (orderDetails) => {
 };
 
 const requestor = (req) => {
-  var options = {
+  const options = {
     url: req.url,
     headers: req.headers,
     method: 'GET'
@@ -55,7 +55,7 @@ const requestor = (req) => {
 };
 
 const wrappedRequest = (req, data) => {
-  var options = {
+  const options = {
     url: req.url,
     headers: req.headers,
     method: req.method || 'POST',
@@ -63,7 +63,7 @@ const wrappedRequest = (req, data) => {
   };
 
   return new Promise((resolve, reject) => {
-    request(options, (error, response, body) => {
+    request(options, (error, response) => {
       if (error) reject(error);
       else resolve(response);
     });
@@ -71,8 +71,8 @@ const wrappedRequest = (req, data) => {
 };
 
 const getToken = () => {
-  return new Promise((resolve, reject) => {
-    let options = {
+  return new Promise((resolve) => {
+    const options = {
       'method': 'POST',
       'url': 'https://connect.bity.com/oauth2/token',
       'headers': {
@@ -182,7 +182,7 @@ const cryptoToFiat = body => {
       .catch(err => {
         reject(error(err, '1'));
       });
-    ;
+    
 
   });
 };
@@ -219,8 +219,8 @@ export default body => {
   if (ctf()) {
     return cryptoToFiat(body);
 
-  } else {
+  } 
     error(body.params);
     return Promise.reject(error('Not supported', body.id));
-  }
+  
 };

@@ -91,7 +91,7 @@ describe('Bity API', () => {
   describe('Bity API - crypto to fiat', () => {
     let orderId = null;
     let accessToken = null;
-    let recvAmt = 0;
+    // const recvAmt = 0;
 
     test('get estimate ', async done => {
       expect.assertions(4);
@@ -115,11 +115,9 @@ describe('Bity API', () => {
       )
         .then(response => {
           const result = response.response.result;
-          console.log(result); // todo remove dev item
           expect(result.input.currency).toBe('ETH');
           expect(result.input.minimum_amount).toEqual(expect.anything());
           expect(result.output.currency).toBe('CHF');
-          recvAmt = result.output.amount;
           orderId = result.status_address;
           expect(response.response.id).toBe(85);
           done();

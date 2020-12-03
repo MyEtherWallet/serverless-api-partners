@@ -25,7 +25,7 @@ function loginToTemporal(usr, pw) {
     }),
   });
 }
-
+// eslint-disable-next-line
 async function uploadToIpfs(resolve, reject, token, file, hash) {
   try {
     // unzip file

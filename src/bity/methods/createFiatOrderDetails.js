@@ -28,7 +28,7 @@ const formatResponse = (order, statusId, token) => {
 };
 
 const requestor = (req) => {
-  var options = {
+  const options = {
     url: req.url,
     headers: req.headers,
     method: 'GET'

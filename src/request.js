@@ -1,7 +1,7 @@
 import request from "request";
 
 export default (req, data) => {
-  var options = {
+  const options = {
     url: req.url,
     headers: req.headers,
     method: req.method || "POST",

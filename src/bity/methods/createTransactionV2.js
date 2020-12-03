@@ -2,10 +2,10 @@ import configs from '../config';
 import requestPromise from '../../request';
 import request from 'request'
 import {error, success} from '../../response';
-import wrappedRequest from '../wrappedRequest';
+// import wrappedRequest from '../wrappedRequest';
 import SimpleEncryptor from 'simple-encryptor';
 import getToken from '../getToken';
-import statusRequest from '../bityRequestOnlyStatusResponse';
+// import statusRequest from '../bityRequestOnlyStatusResponse';
 const encryptor = new SimpleEncryptor(configs.encryptionKey);
 
 
@@ -13,7 +13,7 @@ const encryptor = new SimpleEncryptor(configs.encryptionKey);
  *
  Crypto to Crypto
  */
-const formatResponse = (response, reqBody) => {
+const formatResponse = (response) => {
   return new Promise((resolve, reject) => {
     try {
       const statusId = response.result.headers['location'].replace('/api/v2/orders/', '').replace('/v2/orders/', '');
@@ -78,7 +78,7 @@ export default body => {
         };
 
         return new Promise((resolve, reject) => {
-          request(options, (error, response, body) => {
+          request(options, (error, response) => {
             if (error) reject(error);
             else {
               resolve({result: response, token: token});

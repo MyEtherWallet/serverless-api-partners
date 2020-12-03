@@ -5,11 +5,11 @@ import request from '../request';
 import crypto from 'crypto';
 
 export default (req, logger) => {
-  let alternativeHandlingMethods = ['getFixRate', 'getExchangeAmount'];
+  const alternativeHandlingMethods = ['getFixRate', 'getExchangeAmount'];
   let activeMethod = false; // getFixRate getExchangeAmount
   return new Promise((resolve, reject) => {
     if (req.body) {
-      let body = req.body;
+      const body = req.body;
       if (logger) logger.process(body);
       if (Array.isArray(body)) {
         reject(error(`Invalid Request - ${body}`));
@@ -17,6 +17,7 @@ export default (req, logger) => {
         if (allowedMethods.indexOf(body.method) === -1)
           reject(error(`Invalid Method - ${body.method}`));
         else {
+          // eslint-disable-next-line
           activeMethod = alternativeHandlingMethods.includes(body.method);
           const req = {
             url: changellyConfigs.API_URL,
