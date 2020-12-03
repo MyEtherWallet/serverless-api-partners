@@ -1,8 +1,8 @@
-import {error, success} from '../response';
-import changellyConfigs from './config';
+import {error} from '../response';
+// import changellyConfigs from './config';
 import allowedMethods from './validMethods';
-import request from '../request';
-import crypto from 'crypto';
+// import request from '../request';
+// import crypto from 'crypto';
 import {
   createTransaction,
   getPrice,
@@ -21,7 +21,7 @@ export default (req, logger) => {
     };
 
     if (req.body) {
-      let body = req.body;
+      const body = req.body;
       if (logger) logger.process(body);
       if (Array.isArray(body)) {
         reject(error(`Invalid Request - ${body}`));

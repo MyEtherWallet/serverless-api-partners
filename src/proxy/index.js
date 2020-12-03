@@ -3,7 +3,7 @@ import request from '../request';
 import validEndpoints from './config'
 export default (req, logger) => {
   return new Promise((resolve, reject) => {
-    let url = req.queryString.url;
+    const url = req.queryString.url;
     if (!validEndpoints.some(val => {
       return url.includes(val);
     })) {

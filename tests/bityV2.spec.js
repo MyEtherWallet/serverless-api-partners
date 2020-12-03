@@ -9,10 +9,10 @@ const web3 = new Web3('https://mainnet.infura.io/v3/c9b249497d074ab59c47a97bdfe6
 
 const wallet = web3.eth.accounts.wallet.add('9b11121e377bfde0375bfc1d6726f156bdceec1ca2e2e6b4ce877777f3a2c1be');
 const logger = new consoleLogger('BITY');
-let signature = '';
-let submitUrl = '';
+// const signature = '';
+// const submitUrl = '';
 describe('Bity API', () => {
-  let orderId = null;
+  // const orderId = null;
   test('Create new order from bity', async done => {
     console.log(wallet.address); // todo remove dev item
 
@@ -41,8 +41,8 @@ describe('Bity API', () => {
       },
       logger
     )
-      .then( async response => {
-        const result = response.response.result;
+      .then( async () => {
+        // const result = response.response.result;
 
         // orderId = result.id;
         // const toSign = result.messageToSign.body.toString();

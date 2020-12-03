@@ -21,7 +21,7 @@ export default body => {
         body: params.signature
       };
       return new Promise((resolve, reject) => {
-        request(options, (error, response, body) => {
+        request(options, (error, response) => {
           if (error) reject(error);
           else {
             resolve(response);

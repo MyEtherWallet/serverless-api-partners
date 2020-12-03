@@ -1,10 +1,10 @@
 import configs from '../config';
 import request from '../../request';
 import {error, success} from '../../response';
-import SimpleEncryptor from 'simple-encryptor';
+// import SimpleEncryptor from 'simple-encryptor';
 import getToken from '../getToken';
 
-const encryptor = new SimpleEncryptor(configs.encryptionKey);
+// const encryptor = new SimpleEncryptor(configs.encryptionKey);
 
 
 /**

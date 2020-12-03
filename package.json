@@ -11,7 +11,8 @@
     "create": "npm run start && claudia create --profile claudia --region us-east-1 --api-module dist/index",
     "update": "npm run start && claudia update --profile claudia",
     "updateDev": "npm run start && claudia update --profile claudia --version testing",
-    "test": "jest tests"
+    "test": "jest tests",
+    "lint": "eslint --fix --ext .js,.jsx ."
   },
   "repository": {
     "type": "git",
@@ -29,8 +30,11 @@
     "@babel/plugin-transform-runtime": "^7.10.1",
     "@babel/preset-env": "^7.1.6",
     "babel-core": "^7.0.0-bridge.0",
+    "babel-eslint": "^10.1.0",
     "babel-jest": "^23.6.0",
     "claudia": "^5.2.0",
+    "eslint": "^7.14.0",
+    "eslint-plugin-security": "^1.4.0",
     "jest": "^23.6.0",
     "node-fetch": "^2.6.0"
   },
@@ -39,7 +43,6 @@
     "adm-zip": "^0.4.14",
     "aws-sdk": "^2.362.0",
     "claudia-api-builder": "^4.1.1",
-    "content-hash": "^2.5.2",
     "dotenv": "^6.1.0",
     "ipfs-http-client": "^44.1.0",
     "openid-client": "^3.12.2",

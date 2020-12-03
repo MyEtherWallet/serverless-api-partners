@@ -1,9 +1,9 @@
 import configs from '../config';
-import {error, success} from '../../response';
+import {success} from '../../response';
 
 
 export default body => {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     resolve(
       success({
         jsonrpc: '2.0',

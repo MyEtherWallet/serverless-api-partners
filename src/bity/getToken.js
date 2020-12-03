@@ -3,8 +3,8 @@ import request from 'request';
 
 
 const getToken = (type = 1) => {
-  return new Promise((resolve, reject) => {
-    let options = {
+  return new Promise((resolve) => {
+    const options = {
       'method': 'POST',
       'url': 'https://connect.bity.com/oauth2/token',
       'headers': {

@@ -1,6 +1,6 @@
 import api from "./api";
 
-let success = result => {
+const success = result => {
   return new api.ApiResponse(
     result,
     {
@@ -9,7 +9,7 @@ let success = result => {
     200
   );
 };
-let error = (msg, id) => {
+const error = (msg, id) => {
   return new api.ApiResponse(
     {
       jsonrpc: "2.0",

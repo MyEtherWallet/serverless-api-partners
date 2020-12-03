@@ -14,7 +14,7 @@ export default (req, logger) => {
       reject(error)
     };
     if (req.body) {
-      let body = req.body;
+      const body = req.body;
       if (logger) logger.process(body);
       if (Array.isArray(body)) {
         reject(error(`Invalid Request - ${body}`));

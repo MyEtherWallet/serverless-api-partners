@@ -2,7 +2,7 @@ import request from 'request';
 
 export default (req, data) => {
   const returnBody = typeof data === 'string';
-  let     options = {
+  const     options = {
     url: req.url,
     headers: req.headers,
     method: req.method || 'POST',
