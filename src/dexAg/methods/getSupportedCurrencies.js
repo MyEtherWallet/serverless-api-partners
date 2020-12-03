@@ -50,7 +50,12 @@ export default body => {
           url: `https://gateway.ipfs.io/ipns/tokens.uniswap.org`,
           method: 'GET'
         };
-        Promise.all([request(uniswapTokens), request(dexag)])
+
+        const coinGeckoAndUniswap = {
+          url: `https://www.coingecko.com/tokens_list/uniswap/defi_100/v_0_0_0.json`,
+          method: 'GET'
+        };
+        Promise.all([request(uniswapTokens), request(dexag), request(coinGeckoAndUniswap)])
           .then(results => {
             resolve(processResult(results, body));
           })
