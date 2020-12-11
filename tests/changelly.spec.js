@@ -18,7 +18,7 @@ describe("Changelly API", () => {
     )
       .then(response => {
         const result = response.response.result;
-        console.log(result); // todo remove dev item
+        console.log(result.filter(item => item.includes('rep'))); // todo remove dev item
         expect(result).toContain("eth");
         expect(result.length).toBeGreaterThan(10);
         expect(response.response.id).toBe(83);
@@ -35,7 +35,7 @@ describe("Changelly API", () => {
           method: "getExchangeAmount",
           params: [ {
             from: 'ETH',
-            to: 'BTC',
+            to: 'REP',
             amount: 1
           }],
           id: 83

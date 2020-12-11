@@ -5,15 +5,28 @@ import {error, success} from '../../response';
 
 const processResult = (result, body) => {
   const combinedAndfiltered = new Set();
-  const result1 = JSON.parse(result[1]);
-  JSON.parse(result[0]).tokens.forEach(item => {
-    const inBoth = result1.find(item1 => {
-      return item1.address.toLowerCase() === item.address.toLowerCase()
+  const checked = new Set();
+  combinedAndfiltered.add({
+    'name': 'ETH ',
+    'symbol': 'ETH',
+    'address': '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
+    'decimals': 18
+  });
+  const result1 = JSON.parse(result[0]);
+  for(let i=1; i<result.length; i++){
+    JSON.parse(result[i]).tokens.forEach(item => {
+      const inBoth = result1.find(item1 => {
+        return item1.address.toLowerCase() === item.address.toLowerCase();
+      });
+      if (inBoth) {
+        if(!checked.has(inBoth.address.toLowerCase())){
+          checked.add(inBoth.address.toLowerCase())
+          combinedAndfiltered.add(inBoth);
+        }
+      }
     });
-    if(inBoth){
-      combinedAndfiltered.add(inBoth);
-    }
-  })
+  }
+
   return success({
     jsonrpc: '2.0',
     result: Array.from(combinedAndfiltered),
@@ -55,7 +68,7 @@ export default body => {
           url: `https://www.coingecko.com/tokens_list/uniswap/defi_100/v_0_0_0.json`,
           method: 'GET'
         };
-        Promise.all([request(uniswapTokens), request(dexag), request(coinGeckoAndUniswap)])
+        Promise.all([request(dexag), request(uniswapTokens),  request(coinGeckoAndUniswap)])
           .then(results => {
             resolve(processResult(results, body));
           })

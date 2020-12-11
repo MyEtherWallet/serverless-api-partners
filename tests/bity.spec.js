@@ -53,6 +53,7 @@ describe('Bity API', () => {
     )
       .then(response => {
         const result = response.response.result;
+        console.log(result); // todo remove dev item
         orderId = result.id;
         expect(result.input.amount).toBe('1');
         expect(result.input.currency).toBe('ETH');
