@@ -13,14 +13,25 @@ const processResult = (result, body) => {
     'decimals': 18
   });
   const result1 = JSON.parse(result[0]);
-  for(let i=1; i<result.length; i++){
-    JSON.parse(result[i]).tokens.forEach(item => {
+  const rae = result1.find(item => {
+    return item.symbol.toLowerCase() === 'rae';
+  });
+  if (rae) {
+    combinedAndfiltered.add(rae);
+  }
+  for (let i = 1; i < result.length; i++) {
+    let resultCheck = JSON.parse(result[i]).tokens ;
+    if (!Array.isArray(resultCheck)) {
+      resultCheck = Object.values(resultCheck)
+    }
+    resultCheck.forEach(item => {
       const inBoth = result1.find(item1 => {
         return item1.address.toLowerCase() === item.address.toLowerCase();
       });
+
       if (inBoth) {
-        if(!checked.has(inBoth.address.toLowerCase())){
-          checked.add(inBoth.address.toLowerCase())
+        if (!checked.has(inBoth.address.toLowerCase())) {
+          checked.add(inBoth.address.toLowerCase());
           combinedAndfiltered.add(inBoth);
         }
       }
@@ -64,11 +75,16 @@ export default body => {
           method: 'GET'
         };
 
+        const OneInch = {
+          url: `https://api.1inch.exchange/v2.0/tokens`,
+          method: 'GET'
+        };
+
         const coinGeckoAndUniswap = {
           url: `https://www.coingecko.com/tokens_list/uniswap/defi_100/v_0_0_0.json`,
           method: 'GET'
         };
-        Promise.all([request(dexag), request(uniswapTokens),  request(coinGeckoAndUniswap)])
+        Promise.all([request(dexag), request(uniswapTokens),  request(coinGeckoAndUniswap), request(OneInch)])
           .then(results => {
             resolve(processResult(results, body));
           })

@@ -218,7 +218,9 @@ describe('DEX AG API', () => {
         const result = response.response.result;
         orderId = result.id;
         console.log(result); // todo remove dev item
+
         expect(Array.isArray(result)).toBe(true);
+
         // expect(result.status).toBe('OPEN');
         // expect(result.input.currency).toBe('ETH');
         // expect(result.output.currency).toBe('BTC');
@@ -245,7 +247,8 @@ describe('DEX AG API', () => {
       .then(response => {
         const result = response.response.result;
         orderId = result.id;
-        // console.log(result); // todo remove dev item
+        console.log(result); // todo remove dev item
+        console.log(result.length); // todo remove dev item
         expect(Array.isArray(result)).toBe(true);
         // expect(result.status).toBe('OPEN');
         // expect(result.input.currency).toBe('ETH');
