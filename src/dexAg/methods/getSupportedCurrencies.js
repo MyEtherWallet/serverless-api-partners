@@ -84,7 +84,7 @@ export default body => {
           url: `https://www.coingecko.com/tokens_list/uniswap/defi_100/v_0_0_0.json`,
           method: 'GET'
         };
-        Promise.all([request(dexag), request(uniswapTokens),  request(coinGeckoAndUniswap), request(OneInch)])
+        Promise.all([request(dexag), request(uniswapTokens),  /*request(coinGeckoAndUniswap),*/ request(OneInch)])
           .then(results => {
             resolve(processResult(results, body));
           })

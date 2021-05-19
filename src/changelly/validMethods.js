@@ -8,5 +8,6 @@ export default [
   "validateAddress",
   "createTransaction",
   "createFixTransaction",
-  "getStatus"
+  "getStatus",
+  "getPairsParams"
 ];

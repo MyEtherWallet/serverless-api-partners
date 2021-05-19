@@ -122,7 +122,7 @@ describe('DEX AG API', () => {
           params: {
             fromValue: 0.5,
             fromToken: 'ETH',
-            toToken: 'KNC',
+            toToken: 'DAI',
           },
           id: 83
         }

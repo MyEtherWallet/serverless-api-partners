@@ -7,7 +7,6 @@ export default (req, data) => {
     method: req.method || "POST",
     json: data
   };
-
   return new Promise((resolve, reject) => {
     request(options, (error, response, body) => {
       if (error) reject(error);
