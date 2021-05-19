@@ -14,6 +14,13 @@ export default (req, logger) => {
       if (Array.isArray(body)) {
         reject(error(`Invalid Request - ${body}`));
       } else {
+        // Temp to disable changelly
+        if(changellyConfigs.CHANGELLY_STATUS !== 'active'){
+          if(body.method === 'getCurrenciesFull' || body.method === 'getCurrencies'){
+            return resolve(success({result: []}));
+          }
+        }
+
         if (allowedMethods.indexOf(body.method) === -1)
           reject(error(`Invalid Method - ${body.method}`));
         else {
