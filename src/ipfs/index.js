@@ -4,63 +4,66 @@ import AdmZip from "adm-zip";
 import ipfsConfig from "./config";
 import AWS from "aws-sdk";
 import fs from "fs";
-import IpfsHttpClient from "ipfs-http-client";
+// import IpfsHttpClient from "ipfs-http-client";
 import fetch from "node-fetch";
 
-const { globSource } = IpfsHttpClient;
+const recursive = require("recursive-fs");
+const basePathConverter = require("base-path-converter");
+const FormData = require("form-data");
 const PATH = "/tmp";
 AWS.config.update({ region: ipfsConfig.REGION || "us-east-2" });
 const s3 = new AWS.S3({
   signatureVersion: "v4",
 });
 
-function loginToTemporal(usr, pw) {
-  return fetch(ipfsConfig.API_LOGIN_URL, {
-    method: "POST",
-    headers: {
-      "Content-Type": "text/plain",
-    },
-    body: JSON.stringify({
-      username: usr,
-      password: pw,
-    }),
-  });
-}
+async function uploadToIpfs(resolve, reject, file, hash) {
+  /**
+   * read the uploaded file from S3,
+   * unzip file and write it in a temporary folder,
+   * upload to Pinata IPFS,
+   * resolve hash
+   */
+  const url = ipfsConfig.IPFS_URL;
+  const path = `${PATH}/${hash}`;
+  fs.mkdirSync(path, { recursive: true });
+  const unzipped = new AdmZip(file);
+  unzipped.extractAllTo(path, true);
 
-async function uploadToIpfs(resolve, reject, token, file, hash) {
-  try {
-    // unzip file
-    fs.mkdirSync(`${PATH}/${hash}`, { recursive: true });
-
-    const unzipped = new AdmZip(file);
-    unzipped.extractAllTo(`${PATH}/${hash}`, true);
-    const ipfs = IpfsHttpClient({
-      host: ipfsConfig.API_UPLOAD_HOST,
-      port: ipfsConfig.API_UPLOAD_PORT,
-      protocol: ipfsConfig.API_UPLOAD_PROTOCOL,
-      headers: {
-        authorization: `Bearer ${token.token}`,
-        "X-Hold-Time": 24,
-      },
+  recursive.readdirr(path, function (err, _, files) {
+    if (err) {
+      return reject(error(err));
+    }
+    let data = new FormData();
+    files.forEach((file) => {
+      data.append(`file`, fs.createReadStream(file), {
+        filepath: basePathConverter(path, file),
+      });
     });
 
-    const folderName = fs.readdirSync(`${PATH}/${hash}`);
-    if (folderName.length > 0) {
-      const file = await ipfs.add(
-        globSource(`${PATH}/${hash}/${folderName[0]}`, { recursive: true })
-      );
-      for await (const f of file) {
-        if (f.path === folderName[0]) {
-          const cid = f.cid.toString();
-          resolve(cid);
-        }
-      }
-    } else {
-      reject(error("Your uploaded file might be corrupted or empty!"));
-    }
-  } catch (e) {
-    reject(error(e));
-  }
+    const metadata = JSON.stringify({
+      name: "testname",
+      keyvalues: {
+        exampleKey: "exampleValue",
+      },
+    });
+    data.append("pinataMetadata", metadata);
+
+    fetch(url, {
+      method: "POST",
+      headers: {
+        pinata_api_key: ipfsConfig.PINATA_API_KEY,
+        pinata_secret_api_key: ipfsConfig.PINATA_SECRET_API_KEY,
+      },
+      body: data,
+    })
+      .then((res) => {
+        return res.json();
+      })
+      .then((json) => {
+        resolve(json.IpfsHash);
+      })
+      .catch(reject);
+  });
 }
 
 export default (req) => {
@@ -96,41 +99,19 @@ export default (req) => {
           Bucket: ipfsConfig.BUCKET_NAME,
           Key: `${fileHash}.zip`,
         };
-        console.log("start here");
+        console.log("getting object");
         // get file from s3
         s3.getObject(s3Params)
           .promise()
           .then((data) => {
-            console.log("got package", data);
             try {
-              // login to temporal
-              console.log("login to temporal");
-              const tokenPromise = loginToTemporal(
-                ipfsConfig.TEMPORAL_USERNAME,
-                ipfsConfig.TEMPORAL_PW
-              )
-                .then((tempLogin) => {
-                  console.log("got into temporal");
-                  // upload files to ipfs
-                  return tempLogin.json();
-                })
-                .catch((e) => {
-                  reject(error(e));
-                });
-              tokenPromise
-                .then((token) => {
-                  console.log("upload to ipfs");
-                  uploadToIpfs(resolve, reject, token, data.Body, fileHash);
-                })
-                .catch((e) => {
-                  reject(error(e));
-                });
+              console.log("got body");
+              uploadToIpfs(resolve, reject, data.Body, fileHash);
             } catch (e) {
               reject(error(e));
             }
           })
           .catch((e) => {
-            console.log(e, "errored out");
             reject(error(e));
           });
       } else {

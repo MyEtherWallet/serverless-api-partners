@@ -1,13 +1,10 @@
 require("dotenv").config();
 export default {
-  TEMPORAL_PW: process.env.TEMPORAL_PW || "",
-  TEMPORAL_USERNAME: process.env.TEMPORAL_USERNAME || "",
-  API_LOGIN_URL: "https://api.temporal.cloud/v2/auth/login",
-  API_UPLOAD_HOST: "api.ipfs.temporal.cloud",
-  API_UPLOAD_PROTOCOL: "https",
-  API_UPLOAD_PORT: "443",
+  PINATA_API_KEY: process.env.PINATA_API_KEY || "",
+  PINATA_SECRET_API_KEY: process.env.PINATA_SECRET_API_KEY || "",
   REGION: "us-west-2",
   BUCKET_NAME: "mew-ipfs-bucket",
   UPLOAD_METHOD: "getUploadUrl",
-  UPLOAD_COMPLETE: "uploadComplete"
+  UPLOAD_COMPLETE: "uploadComplete",
+  IPFS_URL: "https://api.pinata.cloud/pinning/pinFileToIPFS",
 };

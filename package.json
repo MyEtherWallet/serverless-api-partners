@@ -39,11 +39,12 @@
     "@bity/api": "^3.7.1",
     "adm-zip": "^0.4.14",
     "aws-sdk": "^2.362.0",
+    "base-path-converter": "^1.0.2",
     "claudia-api-builder": "^4.1.1",
     "content-hash": "^2.5.2",
     "dotenv": "^6.1.0",
-    "ipfs-http-client": "^44.1.0",
     "openid-client": "^3.12.2",
+    "recursive-fs": "^2.1.0",
     "request": "^2.88.0",
     "simple-encryptor": "^2.0.0",
     "uuid": "^8.0.0"
