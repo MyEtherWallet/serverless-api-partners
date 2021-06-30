@@ -9,7 +9,7 @@
   "scripts": {
     "start": "babel src --out-dir dist",
     "create": "npm run start && claudia create --profile claudia --region us-east-1 --api-module dist/index",
-    "update": "npm run start && claudia update --profile claudia",
+    "update": "npm run start && claudia update --profile claudia --runtime nodejs12.x",
     "updateDev": "npm run start && claudia update --profile claudia --version testing",
     "test": "jest tests"
   },
@@ -31,10 +31,10 @@
     "babel-core": "^7.0.0-bridge.0",
     "babel-jest": "^23.6.0",
     "claudia": "^5.2.0",
-    "jest": "^23.6.0",
-    "node-fetch": "^2.6.0"
+    "jest": "^23.6.0"
   },
   "dependencies": {
+    "node-fetch": "^2.6.1",
     "@babel/runtime": "^7.10.2",
     "@bity/api": "^3.7.1",
     "adm-zip": "^0.4.14",
