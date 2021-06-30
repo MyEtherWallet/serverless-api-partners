@@ -99,13 +99,11 @@ export default (req) => {
           Bucket: ipfsConfig.BUCKET_NAME,
           Key: `${fileHash}.zip`,
         };
-        console.log("getting object");
         // get file from s3
         s3.getObject(s3Params)
           .promise()
           .then((data) => {
             try {
-              console.log("got body");
               uploadToIpfs(resolve, reject, data.Body, fileHash);
             } catch (e) {
               reject(error(e));
