@@ -38,7 +38,7 @@
     "@babel/runtime": "^7.10.2",
     "@bity/api": "^3.7.1",
     "adm-zip": "^0.4.14",
-    "aws-sdk": "^2.362.0",
+    "aws-sdk": "^2.814.0",
     "base-path-converter": "^1.0.2",
     "claudia-api-builder": "^4.1.1",
     "content-hash": "^2.5.2",
