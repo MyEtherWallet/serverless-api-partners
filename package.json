@@ -34,7 +34,7 @@
     "jest": "^23.6.0"
   },
   "dependencies": {
-    "node-fetch": "^2.6.1",
+    "node-fetch": "^2.6.7",
     "@babel/runtime": "^7.10.2",
     "@bity/api": "^3.7.1",
     "adm-zip": "^0.4.14",
